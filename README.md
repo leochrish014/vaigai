@@ -1,5 +1,9 @@
 # Vaigai Milk
-
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js&logoColor=white)
+![n8n](https://img.shields.io/badge/n8n-Automation-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-Testing-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 A complete direct-to-consumer dairy platform for Madurai: a cinematic 3D website, an AI assistant (website and WhatsApp), online payment with GST invoices, customer accounts, an admin dashboard and the n8n automation behind it.
 
 ```
