@@ -1,0 +1,1211 @@
+{
+  "name": "Vaigai 05 · Subscriptions and feedback",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 19 * * *"
+            }
+          ]
+        }
+      },
+      "id": "0eb9a04b-d28b-415d-a6a2-6fa895160891",
+      "name": "Every evening 7 PM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "771a1e48-dd09-469b-b35d-66ac3c4d0b48",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "86108961-f09a-412c-b4f7-8d7fea398f66",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "10c08ddb-7a3f-4ffd-8454-4bebb2544fba",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "49bedb0f-8ea2-49bb-a91b-9035d94d8f0c",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "1d9b10e5-3292-45a3-9869-586b4a724e95",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "a4165d8d-efd0-4125-96be-056e57ff158b",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "5c7bfb58-7e6b-4ef3-99d0-130661f53419",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "3faac391-d5b6-472c-b5be-d7044e5a0e91",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "bede04ec-c0ac-422e-b6e7-034bb1bf7513",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "d57fb587-43fa-4bc3-8434-6f45fc109847",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "e350c46e-0ac0-4d44-a08f-15fc4738520d",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "cb98e2a5-51ba-4950-bba5-ca9f700bb1fb",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "74bf47cd-6a05-496f-980e-52041c945be4",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "4e3dce00-2260-40ac-b293-d6e2547879b1",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "c7be1f14-44b9-454c-a2f1-4d03d5f7f575",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "9f41216f-6bc7-4077-9ff2-4e52cd40a480",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "ad8a3fae-c8cb-45e3-ad94-06da597e046c",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "b5d9a60f-2dbf-438b-82cb-879027eadb4e",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b0d8ea04-f8b5-4ec7-b2c3-2cac4c5447d5",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Subscriptions"
+        },
+        "options": {}
+      },
+      "id": "1addedfe-2bc0-4677-adf7-87c8a56a07d6",
+      "name": "Read Subscriptions",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\nconst ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst now=ist(),tomorrow=addDays(now,1),td=ymd(tomorrow),dow=['sun','mon','tue','wed','thu','fri','sat'][tomorrow.getUTCDay()];\nconst out=[];\nfor(const it of $input.all()){const s=it.json;if(String(s.status||'').toLowerCase()!=='active')continue;\n if(s.start_date&&String(s.start_date).slice(0,10)>td)continue;if(s.end_date&&String(s.end_date).slice(0,10)<td)continue;\n const skips=String(s.skip_dates||'').split(',').map(x=>x.trim());if(skips.indexOf(td)>=0)continue;\n const f=String(s.frequency||'daily').toLowerCase();if(f.indexOf('weekly')===0){const days=f.split(':')[1]||'mon';if(days.split(',').map(x=>x.trim().slice(0,3)).indexOf(dow)<0)continue;}\n const items=String(s.items||'').split(';').map(x=>x.trim()).filter(Boolean).map(x=>{const p=x.split(':');return {sku:p[0],qty:Math.max(1,Math.min(99,parseInt(p[1],10)||1))}}).filter(i=>CATALOG[i.sku]);if(!items.length)continue;\n const total=items.reduce((a,i)=>a+i.qty*CATALOG[i.sku].p,0);const txt=items.map(i=>i.qty+' x '+CATALOG[i.sku].n+' ('+CATALOG[i.sku].u+')').join('; ');\n const oid='SUB-'+td.slice(2).replace(/-/g,'')+'-'+String(s.sub_id||'').toUpperCase().slice(0,6);\n out.push({json:{row:{order_id:oid,created_at:new Date().toISOString(),status:'confirmed',customer_name:s.customer_name,phone:String(s.phone||''),address:s.address,area:s.area||'',pincode:s.pincode||'',slot:s.slot||'By 5:30 AM',delivery_date:td,items:txt,total,payment:'subscription',payment_id:'',paid_at:'',invoice_no:'',referral_code:'',rider:'',delivered_at:'',collected_inr:'',notes:'',source:'subscription',utm_source:'',utm_campaign:'',language:s.language||'en',session_id:'',items_json:JSON.stringify(items)},phone:String(s.phone||''),items_text:txt,total,delivery_date:td}});}\nreturn out;",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "d2db438e-0e59-4efe-97d7-946ba85abf10",
+      "name": "Create Tomorrow Orders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $json.row.order_id }}",
+            "created_at": "={{ $json.row.created_at }}",
+            "status": "={{ $json.row.status }}",
+            "customer_name": "={{ $json.row.customer_name }}",
+            "phone": "={{ $json.row.phone }}",
+            "address": "={{ $json.row.address }}",
+            "area": "={{ $json.row.area }}",
+            "pincode": "={{ $json.row.pincode }}",
+            "slot": "={{ $json.row.slot }}",
+            "delivery_date": "={{ $json.row.delivery_date }}",
+            "items": "={{ $json.row.items }}",
+            "total": "={{ $json.row.total }}",
+            "payment": "={{ $json.row.payment }}",
+            "payment_id": "={{ $json.row.payment_id }}",
+            "paid_at": "={{ $json.row.paid_at }}",
+            "invoice_no": "={{ $json.row.invoice_no }}",
+            "referral_code": "={{ $json.row.referral_code }}",
+            "rider": "={{ $json.row.rider }}",
+            "delivered_at": "={{ $json.row.delivered_at }}",
+            "collected_inr": "={{ $json.row.collected_inr }}",
+            "notes": "={{ $json.row.notes }}",
+            "source": "={{ $json.row.source }}",
+            "utm_source": "={{ $json.row.utm_source }}",
+            "utm_campaign": "={{ $json.row.utm_campaign }}",
+            "language": "={{ $json.row.language }}",
+            "session_id": "={{ $json.row.session_id }}",
+            "items_json": "={{ $json.row.items_json }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "95265c0c-c3f2-41f0-8b52-69a56993df52",
+      "name": "Append to Orders sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        900,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "e6783007-27c4-48af-991c-2c9a118c95cd",
+              "leftValue": "={{ $('Config').first().json.wa_token }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "rightValue": "PASTE_WHATSAPP_ACCESS_TOKEN"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7d4cbd2b-e4b3-4dde-8b6f-517bdae1207c",
+      "name": "WhatsApp configured?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({messaging_product:'whatsapp',to:'91'+$('Create Tomorrow Orders').item.json.phone,type:'template',template:{name:'delivery_reminder',language:{code:'en'},components:[{type:'body',parameters:[{type:'text',text:$('Create Tomorrow Orders').item.json.items_text},{type:'text',text:$('Create Tomorrow Orders').item.json.delivery_date}]}]} }) }}",
+        "options": {}
+      },
+      "id": "bb5b05a1-24dd-428e-ba78-0ddeeed92586",
+      "name": "WhatsApp: delivery reminder",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1380,
+        200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 11 * * *"
+            }
+          ]
+        }
+      },
+      "id": "7cea5ba4-16cf-42d4-b442-94d7b038059a",
+      "name": "Every morning 11 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d365e3c1-519f-4154-814e-c56063204aaa",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "85ce8ca4-698b-4f20-b036-e245547412d2",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "866fcbeb-5032-49b3-b944-2fd40da49d27",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "a5ce447b-4a26-471f-8f3d-fbd0cd48a168",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "3b912d87-2bd9-4314-88b4-3784fb686ce2",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "a8f3f38c-ccef-4bad-a242-cc1c402ff479",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "127228b6-9722-4a89-81e9-7ba0e3ea90cd",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "86529b86-02ec-4eac-9bd8-d44105efc7cc",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "69620e23-836a-4ca0-b5d3-a54e6479449e",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "ebf7530f-5b45-4d6e-b853-836d68b33225",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "84f80301-61ba-4d2f-b47e-1b0b7088b48e",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "4b63942b-55a8-4e83-a3de-4b2f9571f6d6",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "b6382729-1eda-4049-87f5-459f695cb77a",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "7856e645-71fb-45aa-9aee-489198c6f00c",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "420750a7-49f6-400f-8fa7-daab93d24b7a",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "f90fd2c2-5af4-46b1-bcce-93f97046cdd9",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "7e30657f-c894-4094-a43a-59b51fc8f24c",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "85f5ac43-3825-40f8-8ba3-0cacc7b3ebdf",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "c5ec38cf-8965-4815-ba90-971132f9f4e3",
+      "name": "Config (feedback request)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (feedback request)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "c1533ea0-e548-4213-8fde-714ec16ef270",
+      "name": "Read Orders (delivered)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        560
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst y=ymd(addDays(ist(),-1));\nreturn $input.all().map(i=>i.json).filter(r=>String(r.status||'').toLowerCase()==='delivered'&&String(r.delivery_date||'').slice(0,10)===y&&/^[6-9]\\d{9}$/.test(String(r.phone||''))).slice(0,200).map(r=>({json:{order_id:r.order_id,phone:String(r.phone),customer_name:r.customer_name}}));",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "3c637b76-7a86-4e9b-908c-a098a7501518",
+      "name": "Pick Yesterday Delivered",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "155f6ec8-dc7e-425b-945f-3b58a6070b3c",
+              "leftValue": "={{ $('Config (feedback request)').first().json.wa_token }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "rightValue": "PASTE_WHATSAPP_ACCESS_TOKEN"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "68bf92bd-f26f-4d13-a58e-5f0fa271946b",
+      "name": "WhatsApp configured? (feedback)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config (feedback request)').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config (feedback request)').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({messaging_product:'whatsapp',to:'91'+$json.phone,type:'template',template:{name:'feedback_request',language:{code:'en'},components:[{type:'body',parameters:[{type:'text',text:$json.customer_name||'there'},{type:'text',text:$json.order_id}]}]} }) }}",
+        "options": {}
+      },
+      "id": "cfee58d7-9ff0-4a09-8ea2-d1ab45484917",
+      "name": "WhatsApp: feedback request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        560
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-feedback",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "ab9d65a9-9844-43bc-9336-b2f579662f98",
+      "name": "Feedback Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        960
+      ],
+      "webhookId": "f4e6b872-b8e0-4a57-89ee-50432feae34d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aa398c31-e808-4ee7-8405-9a9bd6e5ddc2",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "4b61560b-1acd-4ea0-8665-2e7fb0529179",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "d35e4e11-8201-4f52-a308-8d68cc3395ca",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "398ea8e7-1c42-4902-8541-80739ec2aafe",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "472d361c-e463-46b4-90bb-fd834a7d827e",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "63cd6bbc-960c-442f-ad2f-8a0b83420189",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "0d70f2a6-bd18-452c-8107-2d6f19f2beca",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "f488fc86-fe64-4977-b78a-d979acef1d18",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "4e0696fb-909d-4a9a-a743-c0942f852c97",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "b9be4ecc-ca5f-436a-abcf-3c108028276a",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "51bc16d6-ec41-468d-be83-4fe73249c259",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "f9e22bd6-442c-48e3-933c-d39d531cf6b3",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "13b339fb-8bb1-451e-8738-2d66c1c82cbf",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "5bb2fa13-4051-4060-9736-98fe298edd13",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "0b2140fd-df93-4bca-8d7e-83bb6a561e4f",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "e7e45576-7d06-45b8-813d-26c96baf9644",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "c09019b6-3e88-49f5-854a-9089f0339024",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "bce58229-6209-44e1-a854-85214929634a",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8d3f142c-51fb-4340-8a51-5b09b66e0f40",
+      "name": "Config (feedback webhook)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "39cfc122-a182-4dea-9af7-65dd1a5f8f42",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "29982cb3-c4fc-4ba9-9fea-0175d877677c",
+      "name": "Key OK? (feedback)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "b242a44c-acf0-4777-84b3-22d22719c547",
+      "name": "Unauthorized (feedback)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst safe=s=>/^[=+\\-@]/.test(String(s))?\"'\"+s:s;\nconst b=$input.first().json.body||{};const rating=parseInt(b.rating,10);\nif(!(rating>=1&&rating<=5))return [{json:{ok:false,response:{ok:false,error:'rating 1 to 5 required'}}}];\nconst clean=s=>String(s==null?'':s).replace(/[\\u0000-\\u001f]/g,' ').trim();\nlet ph=clean(b.phone).replace(/[\\s()-]/g,'');if(/^\\+?91[6-9]\\d{9}$/.test(ph))ph=ph.replace(/^\\+?91/,'');\nconst row={created_at:new Date().toISOString(),order_id:clean(b.order_id).toUpperCase().slice(0,30),rating,comment:safe(clean(b.comment).slice(0,500)),phone:/^[6-9]\\d{9}$/.test(ph)?ph:'',language:b.lang==='ta'?'ta':'en'};\nreturn [{json:{ok:true,row,low:rating<=2,lead:{type:'complaint',phone:row.phone,detail:'Low rating '+rating+' for '+row.order_id+': '+row.comment,lead_id:'LD-'+ymd(ist()).slice(2).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase(),lang:row.language,source:{utm:{}}},response:{ok:true,thanks:true}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "ef6b80bd-3c64-4dde-9c86-cd7bc97305d6",
+      "name": "Normalize Feedback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1e34ce5-13f6-4514-b9ca-ecc2a38d4d53",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cd737f71-bdea-4abb-8a35-9279f1477dcd",
+      "name": "Feedback valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "63a10b85-4e7b-46ac-9ae6-8cbc73652bc5",
+      "name": "Respond Invalid (feedback)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (feedback webhook)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Feedback"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $json.row.created_at }}",
+            "order_id": "={{ $json.row.order_id }}",
+            "rating": "={{ $json.row.rating }}",
+            "comment": "={{ $json.row.comment }}",
+            "phone": "={{ $json.row.phone }}",
+            "language": "={{ $json.row.language }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "b3a749be-6d5c-4c36-9916-77ab4ceedc93",
+      "name": "Save to Feedback sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1140,
+        900
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Normalize Feedback').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "f81a3e54-abb3-47a8-a7c5-63b2059d94b7",
+      "name": "Respond OK (feedback)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1380,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "12537796-23a2-400c-a8a6-db7e5d329a01",
+              "leftValue": "={{ $('Normalize Feedback').first().json.low }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "377742db-0475-4e8c-8ffa-03b0a0f130d5",
+      "name": "Low rating?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config (feedback webhook)').first().json.base_url }}/webhook/vaigai-lead",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-vaigai-key",
+              "value": "={{ $('Config (feedback webhook)').first().json.api_key }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Normalize Feedback').first().json.lead) }}",
+        "options": {}
+      },
+      "id": "1e2214e0-d1ca-491e-a0af-d1a9d2e75579",
+      "name": "Create callback lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1620,
+        980
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "SUBSCRIPTIONS AND FEEDBACK\n7 PM: creates tomorrow's orders from the 'Subscriptions' tab (daily or weekly:mon,thu; skips paused dates) and sends a reminder.\n11 AM: asks yesterday's delivered customers for a 1 to 5 rating.\nFeedback webhook: save ratings; a rating of 1 or 2 creates a high priority callback lead automatically.\nWhatsApp templates needed: delivery_reminder (2 vars), feedback_request (2 vars).\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 260,
+        "width": 700
+      },
+      "id": "36c0e164-e89d-41eb-81a4-2936bdb7ff47",
+      "name": "Note eff0",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -80
+      ]
+    }
+  ],
+  "connections": {
+    "Every evening 7 PM": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Read Subscriptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Subscriptions": {
+      "main": [
+        [
+          {
+            "node": "Create Tomorrow Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Tomorrow Orders": {
+      "main": [
+        [
+          {
+            "node": "Append to Orders sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Orders sheet": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp configured?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp configured?": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: delivery reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every morning 11 AM": {
+      "main": [
+        [
+          {
+            "node": "Config (feedback request)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (feedback request)": {
+      "main": [
+        [
+          {
+            "node": "Read Orders (delivered)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders (delivered)": {
+      "main": [
+        [
+          {
+            "node": "Pick Yesterday Delivered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick Yesterday Delivered": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp configured? (feedback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp configured? (feedback)": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: feedback request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (feedback webhook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (feedback webhook)": {
+      "main": [
+        [
+          {
+            "node": "Key OK? (feedback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK? (feedback)": {
+      "main": [
+        [
+          {
+            "node": "Normalize Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized (feedback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Feedback": {
+      "main": [
+        [
+          {
+            "node": "Feedback valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback valid?": {
+      "main": [
+        [
+          {
+            "node": "Save to Feedback sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Invalid (feedback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Feedback sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond OK (feedback)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Low rating?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Low rating?": {
+      "main": [
+        [
+          {
+            "node": "Create callback lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

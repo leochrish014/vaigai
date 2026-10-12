@@ -1,0 +1,927 @@
+{
+  "name": "Vaigai 02 · Orders and order status",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-order",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "19c002e0-a3af-4b82-a6e8-f28d9dcdf70f",
+      "name": "Order Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        260
+      ],
+      "webhookId": "593cf7a8-de6e-4626-a116-721181e83aed"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7e49d0da-3121-46c1-bccb-af9db1ab43c7",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "0097d40b-2ba5-4e5f-8204-c17fe756e92c",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "37a7d525-7d35-47a2-baa2-b44a3774cec0",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "e6c3e652-edb1-48d2-92c4-b66e24b058b7",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "db08221f-574c-46ef-a537-d7367724b680",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "f9082367-1809-4cf7-a85b-fb500adfebe2",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "af8835fc-ab76-4e48-a762-74f1fde8b62c",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "82a9cbc6-1ad8-4e56-b4cd-e24516d18c3e",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "840d4e59-21a6-476f-8073-21e75df66f2a",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "6be311c5-eeaa-409a-9e42-995862390693",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "d0a27c49-4952-4a7f-9811-083486a92850",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "de5ef90d-d422-4026-adba-a78ec1c8d9e5",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "91e1fecf-6df6-46a1-8289-002c6f47316a",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "caa62c6e-4766-4d88-aa4f-c5cce6886c9e",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "eb966b0e-b6eb-4187-91f5-ed18cf831dc7",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "a42c177f-8fd2-45e7-865d-a38c275cc3da",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "cc42cf96-8b4c-4bfa-873e-6782bb8fed03",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "9604e171-0212-4279-8f36-54024604b03c",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "cfe78ee8-9e00-4637-a39c-81f2e52a5724",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "f6efcc34-1633-423e-93ce-3f2d55523a2c",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0fdea81a-0605-4d1e-bc5a-2e201be49410",
+      "name": "Key OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "151e328c-7542-49d6-834e-3f19d153c852",
+      "name": "Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\nconst AREAS=['anna nagar','kk nagar','k.k. nagar','teppakulam','theppakulam','goripalayam','thirunagar','tallakulam','thallakulam'];const PIN_MIN=625001,PIN_MAX=625020;\nconst ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst safe=s=>/^[=+\\-@]/.test(String(s))?\"'\"+s:s;\nconst b=$input.first().json.body||{};const errs=[];\nconst items=(Array.isArray(b.items)?b.items:[]).map(i=>({sku:String(i&&i.sku||''),qty:Math.max(0,Math.min(99,parseInt(i&&i.qty,10)||0))})).filter(i=>CATALOG[i.sku]&&i.qty>0).slice(0,20);\nif(!items.length)errs.push('no valid items');\nconst c=b.customer||{};const name=String(c.name||'').replace(/[\\u0000-\\u001f]/g,' ').trim().slice(0,60);if(name.length<2)errs.push('name required');\nlet ph=String(c.phone||'').replace(/[\\s()-]/g,'');if(/^\\+?91[6-9]\\d{9}$/.test(ph))ph=ph.replace(/^\\+?91/,'');if(!/^[6-9]\\d{9}$/.test(ph))errs.push('valid 10 digit mobile required');\nconst addr=String(b.address||'').replace(/[\\u0000-\\u001f]/g,' ').trim().slice(0,200);if(addr.length<8)errs.push('address required');\nif(errs.length)return [{json:{ok:false,errors:errs,response:{ok:false,errors:errs}}}];\nconst pin=(String(b.pincode||addr).match(/\\b(\\d{6})\\b/)||[])[1]||'';const lc=(addr+' '+String(b.area||'')).toLowerCase();const areaHit=AREAS.find(a=>lc.indexOf(a)>=0);\nconst covered=(pin&&+pin>=PIN_MIN&&+pin<=PIN_MAX)||!!areaHit;\nconst now=ist();const dd=ymd(addDays(now,now.getUTCHours()>=21?2:1));\nconst total=items.reduce((a,i)=>a+i.qty*CATALOG[i.sku].p,0);\nconst yy=ymd(now).slice(2).replace(/-/g,'');const id=/^VGM-\\d{6}-[A-Z0-9]{4}$/.test(String(b.order_id||''))?b.order_id:('VGM-'+yy+'-'+Math.random().toString(36).slice(2,6).toUpperCase());\nconst src=b.source||{},utm=src.utm||{};\nconst itemsText=items.map(i=>i.qty+' x '+CATALOG[i.sku].n+' ('+CATALOG[i.sku].u+')').join('; ');\nconst row={order_id:id,created_at:new Date().toISOString(),status:covered?'received':'needs_review',customer_name:safe(name),phone:ph,address:safe(addr),area:safe(areaHit||String(b.area||'').slice(0,40)),pincode:pin,slot:safe(String(b.slot||'By 5:30 AM').slice(0,40)),delivery_date:dd,items:itemsText,total:total,payment:b.payment==='online'?'online_pending':'cash_on_delivery',payment_id:'',paid_at:'',invoice_no:'',referral_code:safe(String(b.referral_code||'').toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,20)),rider:'',delivered_at:'',collected_inr:'',notes:'',source:String(src.page||'website').slice(0,40),utm_source:String(utm.utm_source||''),utm_campaign:String(utm.utm_campaign||''),language:b.lang==='ta'?'ta':'en',session_id:String(b.session_id||'').slice(0,64),items_json:JSON.stringify(items)};\nreturn [{json:{ok:true,row,phone:ph,items_text:itemsText,covered,response:{ok:true,order_id:id,total,delivery_date:dd,status:row.status,payment_required:row.payment==='online_pending'}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "36df1c1a-2a49-48ff-91fc-1b1f51f809a9",
+      "name": "Validate & Price Order",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "d7dac805-80c9-42a8-a2c2-1004b08118b7",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "50edb36e-c0f6-4f97-a77e-cb4787987835",
+      "name": "Order valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "f0429a40-c99a-4fde-aee8-a5df6e79a66a",
+      "name": "Respond Invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $json.row.order_id }}",
+            "created_at": "={{ $json.row.created_at }}",
+            "status": "={{ $json.row.status }}",
+            "customer_name": "={{ $json.row.customer_name }}",
+            "phone": "={{ $json.row.phone }}",
+            "address": "={{ $json.row.address }}",
+            "area": "={{ $json.row.area }}",
+            "pincode": "={{ $json.row.pincode }}",
+            "slot": "={{ $json.row.slot }}",
+            "delivery_date": "={{ $json.row.delivery_date }}",
+            "items": "={{ $json.row.items }}",
+            "total": "={{ $json.row.total }}",
+            "payment": "={{ $json.row.payment }}",
+            "payment_id": "={{ $json.row.payment_id }}",
+            "paid_at": "={{ $json.row.paid_at }}",
+            "invoice_no": "={{ $json.row.invoice_no }}",
+            "referral_code": "={{ $json.row.referral_code }}",
+            "rider": "={{ $json.row.rider }}",
+            "delivered_at": "={{ $json.row.delivered_at }}",
+            "collected_inr": "={{ $json.row.collected_inr }}",
+            "notes": "={{ $json.row.notes }}",
+            "source": "={{ $json.row.source }}",
+            "utm_source": "={{ $json.row.utm_source }}",
+            "utm_campaign": "={{ $json.row.utm_campaign }}",
+            "language": "={{ $json.row.language }}",
+            "session_id": "={{ $json.row.session_id }}",
+            "items_json": "={{ $json.row.items_json }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "3aaadf99-caf8-42e7-9714-981aaacce67b",
+      "name": "Save to Orders sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1140,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Validate & Price Order').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "d4643719-0f50-4794-ad99-495c3288e5b7",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1380,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c6e3a466-72f1-4380-8087-c460dc9884eb",
+              "leftValue": "={{ $('Config').first().json.wa_token }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "rightValue": "PASTE_WHATSAPP_ACCESS_TOKEN"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d4c59871-3705-4e70-9ecf-02e026520afd",
+      "name": "WhatsApp configured?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({messaging_product:'whatsapp',to:'91'+$('Validate & Price Order').first().json.phone,type:'template',template:{name:'order_confirmation',language:{code:'en'},components:[{type:'body',parameters:[{type:'text',text:$('Validate & Price Order').first().json.row.order_id},{type:'text',text:$('Validate & Price Order').first().json.items_text},{type:'text',text:'Rs '+$('Validate & Price Order').first().json.row.total},{type:'text',text:$('Validate & Price Order').first().json.row.delivery_date}]}]} }) }}",
+        "options": {}
+      },
+      "id": "486ffdd5-e677-4cf7-adc9-3027311f6b7c",
+      "name": "WhatsApp: customer confirmation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1620,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({messaging_product:'whatsapp',to:$('Config').first().json.staff_wa,type:'text',text:{body:'New order '+$('Validate & Price Order').first().json.row.order_id+' | '+$('Validate & Price Order').first().json.items_text+' | Rs '+$('Validate & Price Order').first().json.row.total+' | '+$('Validate & Price Order').first().json.row.customer_name+' '+$('Validate & Price Order').first().json.row.phone+' | '+$('Validate & Price Order').first().json.row.address+' | status '+$('Validate & Price Order').first().json.row.status} }) }}",
+        "options": {}
+      },
+      "id": "2c7b3d9b-7208-4930-94b7-f6d64c2aafcc",
+      "name": "WhatsApp: staff alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1860,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Config').first().json.telegram_chat_id }}",
+        "text": "=New order {{ $('Validate & Price Order').first().json.row.order_id }}\n{{ $('Validate & Price Order').first().json.items_text }}\nTotal Rs {{ $('Validate & Price Order').first().json.row.total }}\n{{ $('Validate & Price Order').first().json.row.customer_name }} {{ $('Validate & Price Order').first().json.row.phone }}\n{{ $('Validate & Price Order').first().json.row.address }}\nStatus: {{ $('Validate & Price Order').first().json.row.status }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "354cedef-51e7-429c-a8d5-c6532b68472a",
+      "name": "Telegram: staff alert (optional)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        520
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "ORDERS\nPrices and totals are recalculated here from the catalogue, so a tampered browser cannot change the price. Orders outside the delivery area are saved as needs_review. Create a Google Sheet tab 'Orders' with the headers from sheets/Orders.csv. WhatsApp messages need approved templates: order_confirmation (4 text variables).\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 260,
+        "width": 640
+      },
+      "id": "bd49612d-91f6-42b5-abcc-a5dac90a9e9a",
+      "name": "Note 8e03",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "vaigai-order-status",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "85c6929e-afee-494e-b3d9-72be0745d8c0",
+      "name": "Status Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        780
+      ],
+      "webhookId": "c71bd515-a926-4898-9f7e-7019b497f325"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "45410398-3743-4e05-abe0-e6c572d3b5b4",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "51af0426-9a62-4f81-98f5-9d3b69aa4256",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "828d17c1-7d6e-4128-a12a-3997bba81789",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "16081dc9-1f96-4e30-919f-ea1d16064a58",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "9f6d5957-bcd8-4e3f-b3f8-c27a09062710",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "ad840af0-9d9f-48a0-b2a8-31cb50899671",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "1f2d832b-ec0d-4622-b92a-3bdb2120c37a",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "ae55abe4-9342-4bf1-ba33-e7e2d49e8a70",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "7fc9bb5a-c81f-4777-bf39-8f01aa94876c",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "2776bbdb-2685-4481-88fd-c34f7fb41268",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "42fbc087-1c0c-4e8d-b886-4910c1aaf6d6",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "9d378da9-2748-4e5a-9364-f9bc3b719da3",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "eea6198d-de7e-452e-b94a-9ffda55c9773",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "476980fb-4d4b-4139-b03a-05e2d4bca1ae",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "14610bd1-b66d-4dc6-afac-73e0412c1042",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "84569b80-42a3-4619-89f0-58b25afa2c5e",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "92b8af83-fa9e-4a70-bedb-74ed21c9a35f",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "29968c3c-a760-49bf-b2ef-e00a9dcd7e76",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5e6de9da-299a-4ad0-9fbd-968c6219ae44",
+      "name": "Config (status)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "fd46fb8b-0f65-4b65-ab84-80d6d33b006e",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bde89c18-35bd-405b-ab9f-f843d1aeddfa",
+      "name": "Key OK? (status)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"found\":false}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "3fdbe4f8-9cd0-4d80-8d69-90efa6844723",
+      "name": "Unauthorized (status)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (status)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "b376a723-c171-4271-b852-e317a2e9efc6",
+      "name": "Read Orders",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        780
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const id=String($('Status Webhook').first().json.query&&$('Status Webhook').first().json.query.id||'').toUpperCase().slice(0,30);\nconst rows=$input.all().map(i=>i.json);const r=rows.find(x=>String(x.order_id||'').toUpperCase()===id);\nif(!id||!r)return [{json:{found:false}}];\nreturn [{json:{found:true,order_id:r.order_id,status:r.status,delivery_date:r.delivery_date,total:r.total}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "8aaf1bb8-07d1-4de2-8608-752577e6f491",
+      "name": "Find Order",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "6e5c2ad0-539c-4125-a1ab-949ae7407095",
+      "name": "Respond Status",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        780
+      ]
+    }
+  ],
+  "connections": {
+    "Order Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Key OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK?": {
+      "main": [
+        [
+          {
+            "node": "Validate & Price Order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Price Order": {
+      "main": [
+        [
+          {
+            "node": "Order valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order valid?": {
+      "main": [
+        [
+          {
+            "node": "Save to Orders sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Orders sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp configured?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram: staff alert (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp configured?": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: customer confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp: customer confirmation": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: staff alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (status)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (status)": {
+      "main": [
+        [
+          {
+            "node": "Key OK? (status)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK? (status)": {
+      "main": [
+        [
+          {
+            "node": "Read Orders",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized (status)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders": {
+      "main": [
+        [
+          {
+            "node": "Find Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Order": {
+      "main": [
+        [
+          {
+            "node": "Respond Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

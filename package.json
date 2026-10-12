@@ -1,0 +1,18 @@
+{
+  "name": "vaigai-milk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vaigai Milk: cinematic dairy website, AI assistant, n8n automation, payments, admin and WhatsApp ordering",
+  "scripts": {
+    "build": "python3 frontend/website/src/build/build_site.py && npm run build:n8n",
+    "build:n8n": "python3 backend/n8n/src/gen.py",
+    "format": "node tools/format-js.js",
+    "test": "node tests/run-all.js",
+    "test:unit": "node tests/run-all.js unit",
+    "test:e2e": "node tests/run-all.js e2e",
+    "test:audit": "node tests/run-all.js audit",
+    "mock": "node backend/mock-server/mock-n8n.js"
+  },
+  "devDependencies": { "playwright": "^1.49.0", "sharp": "^0.33.0" },
+  "engines": { "node": ">=18" }
+}

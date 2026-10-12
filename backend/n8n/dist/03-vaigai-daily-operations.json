@@ -1,0 +1,636 @@
+{
+  "name": "Vaigai 03 · Daily operations",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 21 * * *"
+            }
+          ]
+        }
+      },
+      "id": "f3112708-e648-49f8-a335-f697c9ae1bd0",
+      "name": "Every night 9 PM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6bc0e8f-72ac-4907-bad9-d98587956b93",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "93f6a337-df02-4440-97e3-43191b5903f8",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "86ed99ce-4adc-4e28-b5ef-fba4b2601496",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "85930244-7461-437e-b820-a8ce8ac0bfcc",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "e18f2de6-2b08-458b-9d2b-92a858e66921",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "1c4f9a5b-9d9a-49e6-ab1f-6a2d8b4f05ed",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "9bf4a5e3-b0ff-4bdc-82a1-fd98d46484aa",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "5d1e0aee-c1ab-426d-bdfd-e1977ea5de4f",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "2c8f3b2a-c6e6-4169-b9fb-807f5af8bfc9",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "7a5afd60-13a4-4c49-bd8d-afc35ae719af",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "af29a747-be62-436c-9219-721cc959fb5e",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "4818c47a-5119-4166-9f73-a33bae1e1066",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "06eb4681-6b16-4ca5-a2e4-cd22a4d33af3",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "5c3e8439-4901-42a7-9fac-cc16389f9752",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "049fd469-5bc9-4cbb-ac44-d99f1c46ca57",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "cc2c04d2-f19a-4e31-83e4-4e9ddfb485ac",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "4982b7a1-2ac7-4127-9e9d-2f84fbe60f1d",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "ebf52df8-42b8-4144-81f0-ddcfca70f189",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "652ea340-08f7-4353-a60c-d0129dbbe6fb",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "7ef22318-861a-42cb-ab71-6fbaf251d428",
+      "name": "Read Orders",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst cfg=$('Config').first().json;let cap={};try{cap=JSON.parse(cfg.daily_capacity_json)}catch(e){}\nconst tomorrow=ymd(addDays(ist(),1));\nconst rows=$input.all().map(i=>i.json).filter(r=>String(r.delivery_date||'').slice(0,10)===tomorrow&&['received','confirmed'].indexOf(String(r.status||'').toLowerCase())>=0);\nconst totals={};rows.forEach(r=>{let it=[];try{it=JSON.parse(r.items_json||'[]')}catch(e){}it.forEach(i=>totals[i.sku]=(totals[i.sku]||0)+(+i.qty||0))});\nconst byArea={};rows.forEach(r=>{const a=r.area||'Unassigned';(byArea[a]=byArea[a]||[]).push(r)});\nconst alerts=Object.keys(totals).filter(s=>cap[s]&&totals[s]>cap[s]*0.9).map(s=>s+': '+totals[s]+' of capacity '+cap[s]);\nconst review=rows.length?0:0;const lines=['Delivery plan for '+tomorrow,'Orders: '+rows.length,'Revenue to collect: Rs '+rows.reduce((a,r)=>a+(+r.total||0),0),''].concat(Object.keys(totals).map(s=>s+' : '+totals[s])).concat(['']).concat(Object.keys(byArea).map(a=>a+': '+byArea[a].length+' orders')).concat(alerts.length?['','CAPACITY ALERT','  '+alerts.join('\\n  ')]:[]);\nconst routes=rows.map(r=>({delivery_date:tomorrow,area:r.area||'Unassigned',order_id:r.order_id,customer_name:r.customer_name,phone:r.phone,address:r.address,items:r.items,slot:r.slot,collect_inr:r.total}));\nroutes.sort((a,b)=>String(a.area).localeCompare(String(b.area)));\nreturn [{json:{summary_text:lines.join('\\n'),orders:rows.length,alerts,routes}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "51b5286a-7c7a-434d-bce3-9b84b6fdab26",
+      "name": "Plan Tomorrow",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Config').first().json.telegram_chat_id }}",
+        "text": "={{ $json.summary_text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f3ee7dbb-3a7b-4b62-8a6e-c4393a31b507",
+      "name": "Telegram: delivery plan (optional)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        120
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return ($input.first().json.routes||[]).map(r=>({json:r}));",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "2bef448d-f780-4283-ae5c-a97823398add",
+      "name": "Explode Routes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Delivery routes"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "delivery_date": "={{ $json.delivery_date }}",
+            "area": "={{ $json.area }}",
+            "order_id": "={{ $json.order_id }}",
+            "customer_name": "={{ $json.customer_name }}",
+            "phone": "={{ $json.phone }}",
+            "address": "={{ $json.address }}",
+            "items": "={{ $json.items }}",
+            "slot": "={{ $json.slot }}",
+            "collect_inr": "={{ $json.collect_inr }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "f14b9664-f919-4bf5-b93b-d024ba7099eb",
+      "name": "Append delivery routes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1140,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 7 * * *"
+            }
+          ]
+        }
+      },
+      "id": "6bd2f4b4-726c-42ba-aa11-046a81265965",
+      "name": "Every morning 7:30 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75cbf3ab-c840-4438-a0f5-9494867d10b1",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "fc4186c9-8460-4bb1-b127-82f07c63df6f",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "ed35793c-ea1d-40b8-b880-502c7fb1831b",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "e7f9f73b-ae05-46e2-ae66-62151973c72b",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "ef02fc79-61f9-436b-bd38-87238ba39e3d",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "ecc118f4-4070-48dd-b0f7-dd0d375a9296",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "1abcdd18-3307-4b1e-b7e9-2012948cdc95",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "c956b24f-40e2-421e-aca4-a0c27368f98c",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "081a9667-18c2-4529-b38b-f07d391727e4",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "7f2986b6-78a1-4a73-ba89-a61275b06378",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "6f79b836-13d9-4db6-952f-d235edf0beec",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "cc894d00-2cb9-4c75-9002-03459a6775ef",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "d5c60f44-ecdd-4062-acb6-0233b5619cd6",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "b6f07c1d-d216-4db4-9465-dd6113f388b3",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "64be3fae-c25a-4192-bad0-e9d04c3e1de2",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "20405894-bbd1-4893-8365-e7d0dbb836dd",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "47dd9ea7-28f5-4a53-8fec-56845a0ad8a5",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "d35d26c0-1cb9-4058-b5ea-0a8f810bc8e9",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "d39f5923-2c29-4de1-8f5f-ec330adb3006",
+      "name": "Config (morning)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (morning)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "32c6b550-c104-43d6-967f-ff9fe9e4c21a",
+      "name": "Read Orders (morning)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        560
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst today=ymd(ist());const rows=$input.all().map(i=>i.json).filter(r=>String(r.delivery_date||'').slice(0,10)===today&&['delivered','cancelled'].indexOf(String(r.status||'').toLowerCase())<0);\nif(!rows.length)return [];\nreturn [{json:{text:'7:30 AM check: '+rows.length+' deliveries not marked delivered yet for '+today+'.\\n'+rows.slice(0,15).map(r=>r.order_id+' '+(r.area||'')+' '+(r.customer_name||'')).join('\\n')}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "c5d6cb31-9181-4f49-a5c1-805f5fd3a6d0",
+      "name": "Pending Deliveries Today",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Config (morning)').first().json.telegram_chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "aeb4f5b7-553c-470b-9780-36b44bee5d16",
+      "name": "Telegram: pending deliveries (optional)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        560
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "DAILY OPERATIONS\n9 PM: builds tomorrow's plan (totals per product, orders per area, capacity alerts) and writes route rows to the 'Delivery routes' tab for the delivery team.\n7:30 AM: lists today's deliveries not yet marked delivered.\nEdit daily_capacity_json in Config for your real capacity.\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 240,
+        "width": 640
+      },
+      "id": "d8d6d4af-755a-40be-b675-0def342bdf46",
+      "name": "Note cc88",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -80
+      ]
+    }
+  ],
+  "connections": {
+    "Every night 9 PM": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Read Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders": {
+      "main": [
+        [
+          {
+            "node": "Plan Tomorrow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan Tomorrow": {
+      "main": [
+        [
+          {
+            "node": "Telegram: delivery plan (optional)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Explode Routes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explode Routes": {
+      "main": [
+        [
+          {
+            "node": "Append delivery routes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every morning 7:30 AM": {
+      "main": [
+        [
+          {
+            "node": "Config (morning)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (morning)": {
+      "main": [
+        [
+          {
+            "node": "Read Orders (morning)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders (morning)": {
+      "main": [
+        [
+          {
+            "node": "Pending Deliveries Today",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pending Deliveries Today": {
+      "main": [
+        [
+          {
+            "node": "Telegram: pending deliveries (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

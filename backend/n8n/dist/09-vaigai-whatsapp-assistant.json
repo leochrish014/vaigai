@@ -1,0 +1,1123 @@
+{
+  "name": "Vaigai 09 · WhatsApp assistant (chat to order)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "vaigai-whatsapp",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "2703243b-18d6-4d0c-8c8e-6084ac728147",
+      "name": "WhatsApp Verify",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        100
+      ],
+      "webhookId": "84e9b68b-c3f6-4f92-b9fb-9bd7b6985bfb"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "21b0fbc1-0ffe-4c66-98cb-8b4322b60ff1",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "b61d2d3c-5cc5-4d6d-864a-65e127ad7dbd",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "9218942b-21f3-4206-9e6f-abfb2e0b51b6",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "0e0621f4-606c-418f-a6af-a4965329b1e5",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "c93b3e0f-cdba-4560-b09f-4e07d81c969d",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "378b9b8b-e234-48af-a223-f1278182ddf8",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "6d38de2f-b8d7-4605-9fef-9bc4b2890cf7",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "878b0979-340d-4385-a627-672620b6ceb5",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "7ef2043a-a750-4884-b06d-9d22f2280775",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "cb64baf3-d0f9-45c2-9b69-7ac3e621cb60",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "e1f124f6-6426-4e9f-8005-e041519fdcb9",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "2d1a8c7e-083e-4912-9b81-a1f7a3503770",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "3ac965fa-6a9d-4bb3-917f-c2bb428ccec9",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "b1ca74ea-affe-4231-8c48-a0489d09b97d",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "51a99bf9-58ba-4c1e-8af4-8690f1797835",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "4e0f476c-4d19-47fd-a7bf-d896a41b2b08",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "ec913fb0-484a-40f9-8b33-13731a638cc4",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "9544a337-b71e-4906-8fd1-bc30e992c2a0",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "c7a7a4b5-c5eb-4815-8f5d-58ca7b9929c2",
+      "name": "Config (verify hook)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "0cf46f62-5acf-493a-b763-6ca1082747d3",
+              "leftValue": "={{ $json.query['hub.verify_token'] }}",
+              "rightValue": "={{ $json.wa_verify_token }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "2b06ca88-cb92-410c-a0be-2118a89d629f",
+              "leftValue": "={{ $json.query['hub.mode'] }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cca8c9b6-06e8-4e9e-8888-9e38f3ebe79f",
+      "name": "Verify token OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "8ffd5f5c-7c90-4259-91ce-d9440bd93657",
+      "name": "Respond Challenge",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "forbidden",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "id": "f144fe58-a2c7-4afc-9948-3a08b4560d47",
+      "name": "Respond Forbidden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-whatsapp",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "d77aab01-7e29-4999-8391-1b1082f22d20",
+      "name": "WhatsApp Message Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        600
+      ],
+      "webhookId": "539594e2-441a-486d-903f-5b0b7851934c"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb22faa3-2f28-4368-b51a-ca23e7aaf607",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "fcd2ec2d-3b37-40a5-a0a2-16fae0136a5c",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "8cbed660-77c7-4d95-adbb-ea2b705fcc7b",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "59c7d31b-cc4d-4b3c-8518-e2961094f66e",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "b91bd261-e6a7-4d86-8b64-871d20cb38a4",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "dd80664b-e6a1-493d-b54c-4d5e45e44a2a",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "ab8a2bf5-ba0b-4748-9698-ca04fbfbf365",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "2d60236a-b668-4e84-8e70-bdc42660f937",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "8f79f510-6126-470b-be79-899334c5deda",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "a60632ac-3f25-4cf6-abf8-b2b36035265c",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "fdb4e0aa-25d6-41b3-908a-9f549ded1e61",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "526038a8-00ac-4886-9cfb-051f5273a13f",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "71f92caf-31b5-4a5d-acd4-aa7f12075a01",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "1750f7df-295f-494e-b5c5-6a3628bb90d6",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "dc100db7-9d80-4781-8739-6578eb7697de",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "4143cc0b-bfd5-4fdb-8c6c-21496fa0a38c",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "4db95dfd-5142-4f74-8512-e25b815fc253",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "071b158b-94d5-47ca-a4a9-7e23e84e70e8",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b002bc09-8fd5-4b27-90a6-00885057a29b",
+      "name": "Config (messages)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "dataPropertyName": "expected",
+        "secret": "={{ $('Config (messages)').first().json.wa_app_secret }}",
+        "encoding": "hex",
+        "binaryData": true,
+        "binaryPropertyName": "data"
+      },
+      "id": "83699565-9914-40ac-9082-5961ace9ac8d",
+      "name": "HMAC body",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        440,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const w=$('WhatsApp Message Webhook').first().json;const sig=String((w.headers||{})['x-hub-signature-256']||'');const exp='sha256='+String($json.expected||'');\nlet d=sig.length===exp.length?0:1;for(let i=0;i<Math.min(sig.length,exp.length);i++)d|=sig.charCodeAt(i)^exp.charCodeAt(i);\nreturn [{json:{ok:d===0&&sig.length>10}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "f281604e-1537-43ff-9e53-a142a8e3af63",
+      "name": "Check signature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "bad5b149-6584-47db-9973-9e06bbbaf20e",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8bcd157b-d392-46ff-af00-8a17cf827d5c",
+      "name": "Signature valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "ok",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "312c40e7-4637-46b1-abc1-0a32eb411915",
+      "name": "Respond 200",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "invalid signature",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "0c8de130-2989-4bff-9969-a25d0dd570a6",
+      "name": "Respond Bad Signature",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body=($('WhatsApp Message Webhook').first().json.body)||{};\nconst ch=(((body.entry||[])[0]||{}).changes||[])[0],val=(ch&&ch.value)||{},m=(val.messages||[])[0];\nif(!m)return [];\nconst from=String(m.from||'').replace(/\\D/g,'').slice(-10);if(!/^[6-9]\\d{9}$/.test(from))return [];\nlet text='';if(m.type==='text')text=(m.text&&m.text.body)||'';else if(m.type==='interactive'){const r=(m.interactive&&(m.interactive.button_reply||m.interactive.list_reply))||{};text=String(r.id||'')}\nconst prof=((val.contacts||[])[0]||{}).profile||{};\nreturn [{json:{from,msg_id:String(m.id||''),type:m.type,text:String(text).replace(/[\\u0000-\\u001f]/g,' ').slice(0,400),name:String(prof.name||'')}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "c05e298d-2b2b-4478-ac69-2b59e4b40fbe",
+      "name": "Parse WhatsApp event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (messages)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "WA Sessions"
+        },
+        "options": {}
+      },
+      "id": "799b213d-3555-4a60-a034-f3d2f47ee882",
+      "name": "Read WA Sessions",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1540,
+        540
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Vaigai Assistant brain: understands English, Tamil and Tanglish; works offline; no external calls. */\nconst VaigaiBrain = (function () {\n    'use strict';\n    const AREAS = [{\n            k: ['anna nagar', 'annanagar', 'அண்ணா நகர்'], en: 'Anna Nagar', ta: 'அண்ணா நகர்'\n        }, {\n            k: ['kk nagar', 'k k nagar', 'k.k. nagar', 'கே.கே. நகர்', 'கே கே நகர்'], en: 'KK Nagar', ta: 'கே.கே. நகர்'\n        }, {\n            k: ['teppakulam', 'theppakulam', 'தெப்பக்குளம்'], en: 'Teppakulam', ta: 'தெப்பக்குளம்'\n        }, {\n            k: ['goripalayam', 'கோரிப்பாளையம்'], en: 'Goripalayam', ta: 'கோரிப்பாளையம்'\n        }, {\n            k: ['thirunagar', 'திருநகர்'], en: 'Thirunagar', ta: 'திருநகர்'\n        }, {\n            k: ['tallakulam', 'thallakulam', 'தல்லாகுளம்'], en: 'Tallakulam', ta: 'தல்லாகுளம்'\n        }];\n    const SYN = {\n        carton: ['carton', 'pack', 'packet', 'pouch', 'toned', 'பாக்கெட்'], badam: ['badam', 'almond', 'almonds', 'பாதாம்', 'flavoured', 'flavored'], ghee: ['ghee', 'nei', 'நெய்'], curd: ['curd', 'thayir', 'tayir', 'yogurt', 'yoghurt', 'dahi', 'தயிர்'], butter: ['butter', 'vennai', 'வெண்ணெய்', 'வெண்ணை'], hero: ['glass', 'bottle', 'bottles', 'பாட்டில்', 'returnable']\n    };\n    const MILK = ['milk', 'paal', 'pal', 'பால்'];\n    const NUMW = {\n        one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, oru: 1, onru: 1, rendu: 2, irandu: 2, moonu: 3, munru: 3, naalu: 4, nangu: 4, anju: 5, aindhu: 5, aaru: 6, 'ஒரு': 1, 'ஒன்று': 1, 'இரண்டு': 2, 'மூன்று': 3, 'நான்கு': 4, 'ஐந்து': 5, 'ஆறு': 6, 'ஏழு': 7, 'எட்டு': 8, 'ஒன்பது': 9, 'பத்து': 10\n    };\n    const K = {\n        greet: ['hi', 'hello', 'hey', 'hai', 'vanakkam', 'namaste', 'good morning', 'good evening', 'good afternoon', 'வணக்கம்'],\n        thanks: ['thanks', 'thank you', 'thx', 'nandri', 'நன்றி'],\n        bye: ['bye', 'goodbye', 'see you', 'போய் வருகிறேன்'],\n        human: ['human', 'agent', 'person', 'staff', 'executive', 'manager', 'support', 'talk to*', 'speak to*', 'pesanum', 'பேசணும்', 'பேச வேண்டும்', 'நபர்'],\n        complaint: ['complaint', 'complain', 'bad', 'spoil*', 'spoilt', 'sour', 'late', 'delay*', 'not delivered', 'missing', 'refund', 'wrong', 'damaged', 'leak*', 'problem', 'issue', 'worst', 'புகார்', 'பிரச்சனை', 'கெட்டு', 'தாமதம்', 'புளித்து'],\n        checkout: ['checkout', 'check out', 'place order', 'place the order', 'confirm order', 'order now', 'book now', 'proceed', 'pay', 'payment', 'order panna*', 'order pannunga', 'ஆர்டர் செய்', 'ஆர்டர் போடு'],\n        remove: ['remove', 'delete', 'clear', 'empty', 'neekku', 'நீக்கு', 'அழி'],\n        add: ['add*', 'buy', 'want', 'need', 'get', 'give', 'venum', 'vendum', 'vennum', 'kudunga', 'kodunga', 'வேண்டும்', 'வேணும்', 'கொடுங்க', 'போடு', 'order', 'book'],\n        basket: ['basket', 'cart', 'my order', 'kootai', 'கூடை'],\n        delivery: ['deliver*', 'delivery', 'slot', 'time', 'timing', 'when', 'epo', 'eppo', 'area', 'areas', 'pincode', 'pin code', 'available in', 'serve', 'எப்போது', 'எப்ப', 'டெலிவரி', 'பகுதி'],\n        subscription: ['subscription', 'subscribe', 'daily plan', 'monthly', 'every day', 'daily', 'weekly', 'plan', 'regular', 'தினமும்', 'மாதாந்திர', 'சந்தா'],\n        price: ['price', 'cost', 'rate', 'how much', 'evlo', 'evalo', 'evvalavu', 'vilai', 'விலை', 'எவ்வளவு'],\n        recommend: ['recommend*', 'suggest*', 'best', 'which one', 'what should', 'ethu nalla', 'எது நல்லது', 'பரிந்துரை'],\n        quality: ['pasteur*', 'safe', 'adulter*', 'quality', 'test*', 'preservative*', 'organic', 'hygien*', 'antibiotic*', 'தரம்', 'பாதுகாப்பு', 'கலப்படம்'],\n        contact: ['contact', 'phone number', 'address', 'where are you', 'map', 'hours', 'open', 'முகவரி', 'தொலைபேசி'],\n        bulk: ['bulk', 'wholesale', 'cafe', 'hotel', 'restaurant', 'catering', 'b2b', 'function', 'event', 'tea shop', 'sweet shop'],\n        callback: ['call back', 'callback', 'call me', 'ring me', 'phone me', 'என்னை அழை'],\n        language: ['tamil', 'english', 'language', 'தமிழ்', 'ஆங்கிலம்'],\n        theme: ['dark mode', 'light mode', 'dark theme', 'light theme', 'night mode'],\n        offers: ['offer*', 'discount*', 'coupon*', 'deal*', 'promo*', 'free delivery', 'cashback'],\n        health: ['diabet*', 'lactose', 'allerg*', 'baby', 'infant', 'pregnan*', 'cholesterol', 'weight loss', 'medical', 'doctor'],\n        products: ['products', 'product', 'menu', 'catalog', 'catalogue', 'what do you sell', 'what do you have', 'what all', 'enna irukku', 'என்ன இருக்கு', 'பொருட்கள்'],\n        status: ['status', 'track*', 'where is my order'],\n        yes: ['yes', 'y', 'yeah', 'yep', 'ok', 'okay', 'sure', 'confirm', 'confirmed', 'aama', 'aam', 'seri', 'sari', 'ஆம்', 'சரி'],\n        no: ['no', 'n', 'nope', 'cancel', 'stop', 'vendam', 'illa', 'இல்லை', 'வேண்டாம்']\n    };\n    const esc = s => s.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n    const RX = {};\n    for (const k in K)\n        RX[k] = K[k].map(w => {\n            const pre = w.endsWith('*');\n            const b = pre ? w.slice(0, -1) : w;\n            const ascii = /^[\\x00-\\x7f]+$/.test(b);\n            return ascii ? new RegExp('(^|\\\\s)' + esc(b) + (pre ? '' : '(\\\\s|$)')) : { inc: b };\n        });\n    const norm = s => String(s || '').toLowerCase().normalize('NFC').replace(/[^\\p{L}\\p{M}\\p{N}\\s.@+-]/gu, ' ').replace(/(^|\\s)[.-]+|[.-]+(\\s|$)/g, ' ').replace(/\\s+/g, ' ').trim();\n    const has = (t, k) => RX[k].some(r => r.inc ? t.includes(r.inc) : r.test(t));\n    const isTa = s => /[\\u0B80-\\u0BFF]/.test(s);\n    const phoneOf = s => {\n        const d0 = String(s).replace(/[\\s()-]/g, ''), d = /^\\+?91[6-9]\\d{9}$/.test(d0) ? d0.replace(/^\\+?91/, '') : d0;\n        return /^[6-9]\\d{9}$/.test(d) ? d : null;\n    };\n    const pinOf = s => {\n        const m = String(s).match(/\\b(\\d{6})\\b/);\n        return m ? m[1] : null;\n    };\n    const pinOk = p => p && +p >= 625001 && +p <= 625020;\n    const areaOf = t => AREAS.find(a => a.k.some(x => t.includes(x)));\n    const money = n => '₹' + n;\n    function create(ctx) {\n        const cat = ctx.cat, SY = {};\n        cat.forEach((p, i) => {\n            (SYN[p.k] || []).forEach(w => SY[w] = (SY[w] || []).concat(i));\n        });\n        const ix = k => cat.findIndex(p => p.k === k);\n        const L = (lang, en, ta) => lang === 'ta' ? ta : en;\n        const nm = (p, lang) => lang === 'ta' ? p.nt : p.n;\n        function findProducts(t) {\n            const w = t.split(' '), out = {};\n            let milk = false;\n            for (let a = 0; a < w.length; a++) {\n                let idx = null;\n                if (SY[w[a]])\n                    idx = SY[w[a]];\n                else if (MILK.includes(w[a]))\n                    milk = true;\n                if (w[a] === 'vaigai' && w[a + 1] === 'fresh')\n                    idx = [ix('carton')];\n                if (idx) {\n                    let q = null, best = 9;\n                    for (let b = Math.max(0, a - 2); b <= Math.min(w.length - 1, a + 2); b++) {\n                        if (b === a)\n                            continue;\n                        const n = /^\\d{1,2}$/.test(w[b]) ? +w[b] : NUMW[w[b]];\n                        if (n && Math.abs(b - a) < best) {\n                            q = n;\n                            best = Math.abs(b - a);\n                        }\n                    }\n                    idx.forEach(i => {\n                        out[i] = out[i] || {\n                            i, q: q || 1, has: q !== null\n                        };\n                    });\n                }\n            }\n            if (milk && !Object.keys(out).length) {\n                const q = (t.match(/\\b(\\d{1,2})\\b/) || [])[1];\n                [ix('carton'), ix('hero')].forEach(i => out[i] = {\n                    i, q: +q || 1, has: !!q, amb: true\n                });\n            }\n            return Object.values(out);\n        }\n        const payOn = () => !!(ctx.payOnline && ctx.payOnline());\n        const basketTxt = (lang) => {\n            const b = ctx.getBasket();\n            if (!b.length)\n                return L(lang, 'Your basket is empty.', 'உங்கள் கூடை காலியாக உள்ளது.');\n            const tot = b.reduce((a, x) => a + x.q * cat[x.i].p, 0);\n            return b.map(x => x.q + ' × ' + nm(cat[x.i], lang) + ' (' + cat[x.i].u + ') = ' + money(x.q * cat[x.i].p)).join('\\n') + '\\n' + L(lang, 'Total: ', 'மொத்தம்: ') + money(tot);\n        };\n        const chips = (...c) => ({\n            t: 'chips', c\n        });\n        const T = x => ({\n            t: 'text', x\n        });\n        function productInfo(i, lang) {\n            const p = cat[i];\n            return [T(nm(p, lang) + ' (' + p.u + ') — ' + money(p.p) + '. ' + (lang === 'ta' ? p.dt : p.d)), {\n                    t: 'products', i: [i]\n                }, chips([L(lang, 'Add 1', '1 சேர்') + ' ' + nm(p, lang), 'add 1 ' + p.k === 'hero' ? 'add 1 glass bottle' : 'add 1 ' + p.n.toLowerCase()], [L(lang, 'My basket', 'என் கூடை'), 'basket'])];\n        }\n        function recommend(t, lang) {\n            const pick = [], why = [];\n            const r = (re, i, en, ta) => {\n                if (re.test(t)) {\n                    i.forEach(x => {\n                        const j = ix(x);\n                        if (j >= 0 && !pick.includes(j))\n                            pick.push(j);\n                    });\n                    why.push(L(lang, en, ta));\n                }\n            };\n            r(/coffee|tea|chai|காபி|டீ/, ['hero', 'carton'], 'Full cream milk gives the richest coffee and tea.', 'முழு கிரீம் பால் காபி, டீக்கு மிகச் சிறந்தது.');\n            r(/kid|child|school|bedtime|குழந்தை|பள்ளி/, ['badam', 'carton'], 'Kids usually love badam milk; sealed cartons suit lunchboxes.', 'குழந்தைகளுக்கு பாதாம் பால் பிடிக்கும்; பாக்கெட் பள்ளிக்கு ஏற்றது.');\n            r(/sweet|festival|pongal|diwali|payasam|halwa|பொங்கல்|தீபாவளி|பாயசம்|இனிப்பு/, ['ghee', 'butter'], 'Ghee and butter are the base for festival sweets.', 'பண்டிகை இனிப்புகளுக்கு நெய், வெண்ணெய் அடிப்படை.');\n            r(/idli|dosa|breakfast|millet|இட்லி|தோசை|காலை உணவு/, ['curd', 'butter'], 'Curd and butter go with idli and dosa.', 'இட்லி, தோசைக்கு தயிர், வெண்ணெய் ஏற்றது.');\n            r(/summer|cool|lunch|buttermilk|மோர்|கோடை/, ['curd'], 'Cool curd is perfect for summer lunches.', 'கோடை மதிய உணவுக்கு குளிர்ந்த தயிர் சிறந்தது.');\n            r(/smoothie|shake|dessert|ஸ்மூத்தி|இனிப்பு/, ['badam'], 'Badam milk blends smooth for shakes.', 'ஷேக்குகளுக்கு பாதாம் பால் மென்மையாகக் கலக்கும்.');\n            if (!pick.length) {\n                ['carton', 'hero', 'ghee'].forEach(x => pick.push(ix(x)));\n                why.push(L(lang, 'These are our most popular everyday picks.', 'இவை எங்கள் பிரபலமான தினசரி தேர்வுகள்.'));\n            }\n            return [T(why.join(' ')), {\n                    t: 'products', i: pick.slice(0, 3)\n                }, chips([L(lang, 'Add the first one', 'முதலாவது சேர்'), 'add 1 ' + (cat[pick[0]].k === 'hero' ? 'glass bottle' : cat[pick[0]].n.toLowerCase())], [L(lang, 'My basket', 'என் கூடை'), 'basket'])];\n        }\n        function deliveryAns(raw, t, lang) {\n            const pin = pinOf(raw), a = areaOf(t);\n            if (pin) {\n                return pinOk(pin) ? [T(L(lang, 'Yes, we deliver to ' + pin + '. Morning delivery reaches you by 5:30 AM.', pin + ' பகுதிக்கு விநியோகம் உண்டு. காலை 5:30க்குள் உங்கள் வாசலில் இருக்கும்.')), chips([L(lang, 'Order now', 'இப்போது ஆர்டர்'), 'checkout'], [L(lang, 'Show products', 'பொருட்கள்'), 'products'])] : [T(L(lang, 'We do not deliver to ' + pin + ' yet. I can ask our team to call you in case we can arrange it.', pin + ' பகுதிக்கு இன்னும் விநியோகம் இல்லை. ஏற்பாடு செய்ய முடியுமா என்று எங்கள் குழு அழைக்க வேண்டுமா?')), chips([L(lang, 'Request a call', 'அழைப்பு கோரு'), 'call me back'])];\n            }\n            if (a)\n                return [T(L(lang, 'Yes, ' + a.en + ' is on our morning delivery route. Delivery reaches you by 5:30 AM.', a.ta + ' எங்கள் காலை விநியோக வழியில் உள்ளது. காலை 5:30க்குள் வந்து சேரும்.')), chips([L(lang, 'Order now', 'இப்போது ஆர்டர்'), 'checkout'], [L(lang, 'Show products', 'பொருட்கள்'), 'products'])];\n            return [T(L(lang, 'We deliver across Anna Nagar, KK Nagar, Teppakulam, Goripalayam, Thirunagar and Tallakulam, daily by 5:30 AM. Tell me your area or 6-digit pincode and I will confirm.', 'அண்ணா நகர், கே.கே. நகர், தெப்பக்குளம், கோரிப்பாளையம், திருநகர், தல்லாகுளம் பகுதிகளுக்கு தினமும் காலை 5:30க்குள் விநியோகம். உங்கள் பகுதி அல்லது 6 இலக்க பின்கோடு சொல்லுங்கள்.'))];\n        }\n        function startOrder(st, lang) {\n            const b = ctx.getBasket();\n            if (!b.length)\n                return {\n                    st, m: [T(L(lang, 'Your basket is empty. What would you like to order?', 'உங்கள் கூடை காலியாக உள்ளது. என்ன ஆர்டர் செய்ய விரும்புகிறீர்கள்?')), {\n                            t: 'products', i: [0, 5, 2, 3]\n                        }, chips([L(lang, 'Recommend for me', 'பரிந்துரை'), 'recommend'])]\n                };\n            st = {\n                mode: 'order', step: 'name', d: {}\n            };\n            return {\n                st, m: [T(basketTxt(lang)), T(L(lang, 'Great. To place your order I need a few details. What is your name?', 'சரி. ஆர்டருக்கு சில விவரங்கள் தேவை. உங்கள் பெயர் என்ன?'))]\n            };\n        }\n        const cm = (d, lang) => [T(basketTxt(lang) + '\\n\\n' + L(lang, 'Name: ', 'பெயர்: ') + d.name + '\\n' + L(lang, 'Phone: ', 'தொலைபேசி: ') + d.phone + '\\n' + L(lang, 'Address: ', 'முகவரி: ') + d.addr + '\\n' + L(lang, 'Slot: ', 'நேரம்: ') + d.slot + (d.payment ? '\\n' + L(lang, 'Payment: ', 'பணம்: ') + (d.payment === 'online' ? L(lang, 'Online (UPI / card)', 'ஆன்லைன் (UPI / கார்டு)') : L(lang, 'Cash on delivery', 'டெலிவரியில் பணம்')) : '')), T(L(lang, 'Shall I place this order?', 'இந்த ஆர்டரை உறுதி செய்யவா?')), chips([L(lang, 'Yes, place order', 'ஆம், ஆர்டர் செய்'), 'yes'], [L(lang, 'Cancel', 'ரத்து'), 'cancel'])];\n        function flow(raw, t, st, lang) {\n            const d = st.d;\n            const cancel = has(t, 'no') && st.step !== 'confirm' && t.split(' ').length <= 2 && /cancel|stop|vendam|வேண்டாம்/.test(t);\n            if (cancel || /^(menu|start over|exit)$/.test(t))\n                return {\n                    st: { mode: null }, m: [T(L(lang, 'No problem, I have cancelled that. Anything else?', 'சரி, ரத்து செய்துவிட்டேன். வேறு ஏதாவது?')), chips([L(lang, 'Show products', 'பொருட்கள்'), 'products'])]\n                };\n            if (st.mode === 'order') {\n                if (st.step === 'name') {\n                    if (raw.trim().length < 2)\n                        return {\n                            st, m: [T(L(lang, 'Please tell me your name.', 'உங்கள் பெயரைச் சொல்லுங்கள்.'))]\n                        };\n                    d.name = raw.trim().slice(0, 60);\n                    if (ctx.knownPhone) {\n                        d.phone = ctx.knownPhone;\n                        st.step = 'addr';\n                        return {\n                            st, m: [T(L(lang, 'Thanks ' + d.name + '. Your delivery address with area and pincode? (We will use this WhatsApp number.)', 'நன்றி ' + d.name + '. டெலிவரி முகவரி (பகுதி, பின்கோடுடன்)? (இந்த வாட்ஸ்அப் எண்ணைப் பயன்படுத்துவோம்.)'))]\n                        };\n                    }\n                    st.step = 'phone';\n                    return {\n                        st, m: [T(L(lang, 'Thanks ' + d.name + '. Your mobile number? (10 digits)', 'நன்றி ' + d.name + '. உங்கள் மொபைல் எண்? (10 இலக்கம்)'))]\n                    };\n                }\n                if (st.step === 'phone') {\n                    const p = phoneOf(raw);\n                    if (!p)\n                        return {\n                            st, m: [T(L(lang, 'That does not look like a valid Indian mobile number. Please send 10 digits.', 'சரியான மொபைல் எண் போல இல்லை. 10 இலக்கம் அனுப்புங்கள்.'))]\n                        };\n                    d.phone = p;\n                    st.step = 'addr';\n                    return {\n                        st, m: [T(L(lang, 'Your delivery address with area and pincode?', 'டெலிவரி முகவரி (பகுதி, பின்கோடுடன்)?'))]\n                    };\n                }\n                if (st.step === 'addr') {\n                    if (raw.trim().length < 8)\n                        return {\n                            st, m: [T(L(lang, 'Please share the full address with area and pincode.', 'முழு முகவரியை பகுதி, பின்கோடுடன் அனுப்புங்கள்.'))]\n                        };\n                    const pin = pinOf(raw), a = areaOf(t);\n                    d.addr = raw.trim().slice(0, 200);\n                    d.pin = pin || '';\n                    d.area = a ? a.en : '';\n                    if (!(a || pinOk(pin)))\n                        return {\n                            st, m: [T(L(lang, 'I could not confirm that area is on our route. Please check the area name or pincode, or I can request a call from our team.', 'அந்தப் பகுதி எங்கள் வழியில் உள்ளதா என உறுதி செய்ய முடியவில்லை. பகுதி/பின்கோடை சரிபாருங்கள் அல்லது குழுவின் அழைப்பைக் கோரலாம்.')), chips([L(lang, 'Request a call', 'அழைப்பு கோரு'), 'call me back'])]\n                        };\n                    st.step = 'slot';\n                    return {\n                        st, m: [T(L(lang, 'When should we deliver?', 'எப்போது டெலிவரி வேண்டும்?')), {\n                                t: 'chips', c: [[L(lang, 'By 5:30 AM', 'காலை 5:30க்குள்'), 'slot1'], [L(lang, '6:30 to 7:30 AM', 'காலை 6:30 முதல் 7:30'), 'slot2']]\n                            }]\n                    };\n                }\n                if (st.step === 'slot') {\n                    d.slot = /2|6:30|7:30|இரண்டாவது/.test(t) ? '6:30-7:30 AM' : 'By 5:30 AM';\n                    if (payOn()) {\n                        st.step = 'pay';\n                        return {\n                            st, m: [T(L(lang, 'How would you like to pay?', 'எப்படி பணம் செலுத்த விரும்புகிறீர்கள்?')), chips([L(lang, 'Pay online (UPI / card)', 'ஆன்லைனில் செலுத்து'), 'pay_online'], [L(lang, 'Cash on delivery', 'டெலிவரியில் பணம்'), 'pay_cod'])]\n                        };\n                    }\n                    st.step = 'confirm';\n                    return {\n                        st, m: [T(basketTxt(lang) + '\\n\\n' + L(lang, 'Name: ', 'பெயர்: ') + d.name + '\\n' + L(lang, 'Phone: ', 'தொலைபேசி: ') + d.phone + '\\n' + L(lang, 'Address: ', 'முகவரி: ') + d.addr + '\\n' + L(lang, 'Slot: ', 'நேரம்: ') + d.slot), T(L(lang, 'Shall I place this order? Payment is on delivery or as your team confirms on WhatsApp.', 'இந்த ஆர்டரை உறுதி செய்யவா? பணம் டெலிவரியில் அல்லது வாட்ஸ்அப்பில் குழு உறுதிசெய்யும்படி.')), chips([L(lang, 'Yes, place order', 'ஆம், ஆர்டர் செய்'), 'yes'], [L(lang, 'Cancel', 'ரத்து'), 'cancel'])]\n                    };\n                }\n                if (st.step === 'pay') {\n                    if (/online|upi|card|razorpay|pay now|ஆன்லைன்/.test(t))\n                        d.payment = 'online';\n                    else if (/cod|cash|delivery|பணம்|டெலிவரி/.test(t))\n                        d.payment = 'cod';\n                    else\n                        return {\n                            st, m: [T(L(lang, 'Please choose Pay online or Cash on delivery.', 'ஆன்லைனில் செலுத்து அல்லது டெலிவரியில் பணம் என்பதைத் தேர்ந்தெடுங்கள்.'))]\n                        };\n                    st.step = 'confirm';\n                    return {\n                        st, m: cm(d, lang)\n                    };\n                }\n                if (st.step === 'confirm') {\n                    if (has(t, 'yes')) {\n                        const b = ctx.getBasket();\n                        const order = {\n                            items: b.map(x => ({\n                                sku: cat[x.i].sku, name: cat[x.i].n, qty: x.q, unit_price: cat[x.i].p\n                            })), total: b.reduce((a, x) => a + x.q * cat[x.i].p, 0), customer: {\n                                name: d.name, phone: d.phone\n                            }, address: d.addr, area: d.area, pincode: d.pin, slot: d.slot, payment: d.payment === 'online' ? 'online' : 'cod', lang\n                        };\n                        return {\n                            st: { mode: null }, m: [T(L(lang, 'Placing your order…', 'உங்கள் ஆர்டரை பதிவு செய்கிறேன்…'))], a: [{\n                                    type: 'submit_order', order\n                                }]\n                        };\n                    }\n                    if (has(t, 'no'))\n                        return {\n                            st: { mode: null }, m: [T(L(lang, 'Order cancelled. Your basket is still saved.', 'ஆர்டர் ரத்து செய்யப்பட்டது. கூடை அப்படியே உள்ளது.'))]\n                        };\n                    return {\n                        st, m: [T(L(lang, 'Please say yes to confirm or cancel to stop.', 'உறுதி செய்ய \"ஆம்\" அல்லது நிறுத்த \"ரத்து\" என்று சொல்லுங்கள்.'))]\n                    };\n                }\n            }\n            if (st.mode === 'lead') {\n                if (st.step === 'detail') {\n                    d.detail = raw.trim().slice(0, 400);\n                    if (ctx.knownPhone) {\n                        return {\n                            st: { mode: null }, m: [T(L(lang, 'Done. Our team will call you on this number shortly. Reference: ', 'முடிந்தது. எங்கள் குழு இதே எண்ணில் விரைவில் அழைக்கும். குறிப்பு எண்: ') + '{ref}')], a: [{\n                                    type: 'submit_lead', lead: {\n                                        type: d.type, phone: ctx.knownPhone, detail: d.detail, lang, basket: ctx.getBasket().map(x => x.q + ' x ' + cat[x.i].n).join(', ')\n                                    }\n                                }]\n                        };\n                    }\n                    st.step = 'phone';\n                    return {\n                        st, m: [T(L(lang, 'Thank you. What mobile number can our team reach you on?', 'நன்றி. எந்த மொபைல் எண்ணில் அழைக்கலாம்?'))]\n                    };\n                }\n                if (st.step === 'phone') {\n                    const p = phoneOf(raw);\n                    if (!p)\n                        return {\n                            st, m: [T(L(lang, 'Please send a valid 10 digit mobile number.', 'சரியான 10 இலக்க மொபைல் எண்ணை அனுப்புங்கள்.'))]\n                        };\n                    const lead = {\n                        type: d.type, phone: p, detail: d.detail || '', lang, basket: ctx.getBasket().map(x => x.q + ' x ' + cat[x.i].n).join(', ')\n                    };\n                    return {\n                        st: { mode: null }, m: [T(L(lang, 'Done. Our team will call you shortly. Reference: ', 'முடிந்தது. எங்கள் குழு விரைவில் அழைக்கும். குறிப்பு எண்: ') + '{ref}')], a: [{\n                                type: 'submit_lead', lead\n                            }]\n                    };\n                }\n            }\n            if (st.mode === 'sub') {\n                if (has(t, 'yes')) {\n                    st = {\n                        mode: 'lead', step: 'phone', d: {\n                            type: 'subscription', detail: d.detail\n                        }\n                    };\n                    return {\n                        st, m: [T(L(lang, 'Lovely. What mobile number can our team reach you on to set it up?', 'சரி. இதை அமைக்க எந்த மொபைல் எண்ணில் அழைக்கலாம்?'))]\n                    };\n                }\n                return {\n                    st: { mode: null }, m: [T(L(lang, 'No problem. Ask me anything else.', 'சரி. வேறு எதாவது கேளுங்கள்.'))]\n                };\n            }\n            return {\n                st: { mode: null }, m: []\n            };\n        }\n        function subscription(raw, t, lang) {\n            const f = findProducts(t), p = f.length ? cat[f[0].i] : cat[0], q = f.length && f[0].has ? f[0].q : ((t.match(/\\b(\\d{1,2})\\b/) || [])[1] ? +t.match(/\\b(\\d{1,2})\\b/)[1] : 1), weekly = /weekly|week|வாரம்/.test(t), n = weekly ? 4 : 30, tot = q * n * p.p;\n            const text = L(lang, q + ' × ' + p.n + ' (' + p.u + ') ' + (weekly ? 'every week' : 'every day') + ' comes to about ' + money(tot) + ' a month at current prices. Our team confirms the plan and any change on WhatsApp.', q + ' × ' + p.nt + ' (' + p.u + ') ' + (weekly ? 'வாரந்தோறும்' : 'தினமும்') + ' தற்போதைய விலையில் மாதத்திற்கு சுமார் ' + money(tot) + '. திட்டத்தை எங்கள் குழு வாட்ஸ்அப்பில் உறுதி செய்யும்.');\n            return {\n                m: [T(text), T(L(lang, 'Shall I ask our team to set this up for you?', 'உங்களுக்காக இதை அமைக்க குழுவிடம் கேட்கவா?')), chips([L(lang, 'Yes, set it up', 'ஆம், அமை'), 'yes'], [L(lang, 'No thanks', 'வேண்டாம்'), 'no'])], detail: q + ' x ' + p.n + (weekly ? ' weekly' : ' daily') + ' (~' + money(tot) + '/month)'\n            };\n        }\n        function intentOf(raw) {\n            const t = norm(raw), f = findProducts(t), o = {\n                t, products: f\n            };\n            if (/vgm-\\d{6}-[a-z0-9]{3,6}/i.test(raw))\n                return Object.assign(o, { intent: 'status' });\n            const order = ['human', 'complaint', 'status', 'checkout', 'remove', 'callback', 'subscription', 'bulk', 'delivery', 'price', 'recommend', 'quality', 'offers', 'health', 'contact', 'language', 'theme', 'basket', 'thanks', 'bye', 'greet'];\n            if (f.length && has(t, 'price') && !has(t, 'add') && !has(t, 'subscription'))\n                return Object.assign(o, { intent: 'price' });\n            if (f.length && (has(t, 'add') || /^\\d/.test(t) || f.some(x => x.has)))\n                if (!has(t, 'delivery') && !has(t, 'subscription') && !has(t, 'recommend') && !has(t, 'checkout') && !has(t, 'remove'))\n                    return Object.assign(o, { intent: 'add' });\n            if (pinOf(raw) && !has(t, 'add'))\n                return Object.assign(o, { intent: 'delivery' });\n            if (areaOf(t) && !has(t, 'add'))\n                return Object.assign(o, { intent: 'delivery' });\n            for (const k of order) {\n                if (has(t, k)) {\n                    if (k === 'delivery' && f.length && !has(t, 'deliver*') && !/time|when|slot|epo|எப்போது/.test(t))\n                        continue;\n                    return Object.assign(o, { intent: k });\n                }\n            }\n            if (has(t, 'products'))\n                return Object.assign(o, { intent: 'products' });\n            if (has(t, 'add'))\n                return Object.assign(o, { intent: 'add' });\n            if (f.length)\n                return Object.assign(o, { intent: 'info' });\n            if (has(t, 'yes'))\n                return Object.assign(o, { intent: 'yes' });\n            if (has(t, 'no'))\n                return Object.assign(o, { intent: 'no' });\n            return Object.assign(o, { intent: 'unknown' });\n        }\n        function respond(raw, st, uiLang) {\n            st = st || { mode: null };\n            const tt = norm(raw);\n            let lang = isTa(raw) ? 'ta' : (uiLang || 'en');\n            if (st.mode && !/^(menu|start over|exit)$/.test(tt)) {\n                const r = flow(String(raw), tt, st, lang);\n                if (r.m.length || r.a)\n                    return Object.assign({\n                        intent: 'flow:' + st.mode, lang\n                    }, r);\n            }\n            const I = intentOf(raw), t = I.t, f = I.products;\n            let m = [], a = [], ns = { mode: null };\n            switch (I.intent) {\n                case 'greet':\n                    m = [T(L(lang, 'Vanakkam! I am the Vaigai assistant. I can show products, build your basket, check delivery to your area, set up daily plans and place your order.', 'வணக்கம்! நான் வைகை உதவியாளர். பொருட்களைக் காட்ட, கூடை அமைக்க, உங்கள் பகுதிக்கு டெலிவரி சரிபார்க்க, தினசரி திட்டம் அமைக்க, ஆர்டர் செய்ய உதவுவேன்.')), chips([L(lang, 'Show products', 'பொருட்கள்'), 'products'], [L(lang, 'Recommend for coffee', 'காபிக்கு பரிந்துரை'), 'recommend for coffee'], [L(lang, 'Delivery in my area', 'என் பகுதியில் டெலிவரி'), 'delivery'], [L(lang, 'Talk to the team', 'குழுவுடன் பேச'), 'talk to human'])];\n                    break;\n                case 'thanks':\n                    m = [T(L(lang, 'You are welcome! Anything else I can help with?', 'நன்றி! வேறு ஏதாவது உதவி வேண்டுமா?'))];\n                    break;\n                case 'bye':\n                    m = [T(L(lang, 'Thank you for visiting Vaigai Milk. Have a fresh day!', 'வைகை பால் வருகைக்கு நன்றி. இனிய நாளாகட்டும்!'))];\n                    break;\n                case 'products':\n                    m = [T(L(lang, 'Here is our range. Tap Add to put anything in your basket.', 'எங்கள் பொருட்கள் இதோ. கூடையில் சேர்க்க \"Add\" தட்டுங்கள்.')), {\n                            t: 'products', i: cat.map((_, i) => i)\n                        }];\n                    break;\n                case 'price':\n                case 'info': {\n                    if (!f.length) {\n                        m = [T(L(lang, 'Which product? Milk, badam milk, ghee, curd or butter?', 'எந்தப் பொருள்? பால், பாதாம் பால், நெய், தயிர் அல்லது வெண்ணெய்?')), {\n                                t: 'products', i: cat.map((_, i) => i)\n                            }];\n                        break;\n                    }\n                    if (f.length > 1 && f.some(x => x.amb)) {\n                        m = [T(L(lang, 'We have two kinds of milk:', 'எங்களிடம் இரண்டு வகை பால் உள்ளது:')), {\n                                t: 'products', i: f.map(x => x.i)\n                            }];\n                        break;\n                    }\n                    m = f.length === 1 ? productInfo(f[0].i, lang) : [T(f.map(x => nm(cat[x.i], lang) + ' ' + money(cat[x.i].p) + ' (' + cat[x.i].u + ')').join('\\n')), {\n                            t: 'products', i: f.map(x => x.i)\n                        }];\n                    break;\n                }\n                case 'add': {\n                    if (!f.length) {\n                        m = [T(L(lang, 'What would you like to add?', 'என்ன சேர்க்க வேண்டும்?')), {\n                                t: 'products', i: [0, 5, 1, 2, 3, 4]\n                            }];\n                        break;\n                    }\n                    if (f.some(x => x.amb)) {\n                        m = [T(L(lang, 'Which milk would you like?', 'எந்தப் பால் வேண்டும்?')), {\n                                t: 'products', i: f.map(x => x.i)\n                            }];\n                        break;\n                    }\n                    f.forEach(x => a.push({\n                        type: 'add', i: x.i, q: x.q\n                    }));\n                    m = [T(L(lang, 'Added: ', 'சேர்க்கப்பட்டது: ') + f.map(x => x.q + ' × ' + nm(cat[x.i], lang)).join(', ')), chips([L(lang, 'Checkout', 'ஆர்டர் செய்'), 'checkout'], [L(lang, 'My basket', 'என் கூடை'), 'basket'], [L(lang, 'Add more', 'மேலும் சேர்'), 'products'])];\n                    break;\n                }\n                case 'remove':\n                    if (/clear|empty|all|அழி/.test(t) || !f.length) {\n                        a.push({ type: 'clear' });\n                        m = [T(L(lang, 'Basket cleared.', 'கூடை காலி செய்யப்பட்டது.'))];\n                    }\n                    else {\n                        f.forEach(x => a.push({\n                            type: 'remove', i: x.i\n                        }));\n                        m = [T(L(lang, 'Removed ' + f.map(x => cat[x.i].n).join(', ') + '.', 'நீக்கப்பட்டது: ' + f.map(x => cat[x.i].nt).join(', ')))];\n                    }\n                    break;\n                case 'basket':\n                    m = [T(basketTxt(lang)), chips([L(lang, 'Checkout', 'ஆர்டர் செய்'), 'checkout'], [L(lang, 'Add more', 'மேலும் சேர்'), 'products'])];\n                    break;\n                case 'checkout': {\n                    const r = startOrder({}, lang);\n                    ns = r.st.mode ? r.st : { mode: null };\n                    m = r.m;\n                    break;\n                }\n                case 'delivery':\n                    m = deliveryAns(raw, t, lang);\n                    break;\n                case 'subscription': {\n                    const r = subscription(raw, t, lang);\n                    m = r.m;\n                    ns = {\n                        mode: 'sub', d: { detail: r.detail }\n                    };\n                    break;\n                }\n                case 'recommend':\n                    m = recommend(t, lang);\n                    break;\n                case 'quality':\n                    m = [T(L(lang, 'Every batch is checked at the farm, at the chilling centre and again at our dairy before it is sealed. Milk is chilled within hours and delivered cold.', 'ஒவ்வொரு தொகுப்பும் பண்ணையிலும், குளிர்விப்பு நிலையத்திலும், பால் நிலையத்திலும் சோதிக்கப்பட்டு மூடப்படுகிறது. சில மணி நேரத்தில் குளிர்விக்கப்பட்டு குளிர்ந்த நிலையில் வழங்கப்படுகிறது.'))];\n                    break;\n                case 'contact':\n                    m = [T(L(lang, 'You can reach us on WhatsApp or call the number in the footer. Orders are taken 6 AM to 9 PM, with delivery daily by 5:30 AM.', 'வாட்ஸ்அப் அல்லது அடிக்குறிப்பில் உள்ள எண்ணில் அழைக்கலாம். ஆர்டர்: காலை 6 முதல் இரவு 9 வரை; விநியோகம் தினமும் காலை 5:30க்குள்.')), chips([L(lang, 'Open WhatsApp', 'வாட்ஸ்அப் திற'), 'talk to human'])];\n                    break;\n                case 'offers':\n                    m = [T(L(lang, 'I do not have any running offers listed. Our team can share current offers on WhatsApp.', 'தற்போது எந்தச் சலுகையும் பட்டியலில் இல்லை. தற்போதைய சலுகைகளை வாட்ஸ்அப்பில் குழு பகிரும்.')), chips([L(lang, 'Ask on WhatsApp', 'வாட்ஸ்அப்பில் கேள்'), 'talk to human'])];\n                    break;\n                case 'health':\n                    m = [T(L(lang, 'I cannot give medical advice. Please check with your doctor about milk products for your condition. I can tell you what is in each product.', 'நான் மருத்துவ ஆலோசனை வழங்க முடியாது. உங்கள் நிலைக்கு பால் பொருட்கள் பற்றி மருத்துவரிடம் கேளுங்கள். ஒவ்வொரு பொருளிலும் என்ன உள்ளது என்று சொல்ல முடியும்.')), {\n                            t: 'products', i: [0, 1, 3]\n                        }];\n                    break;\n                case 'language': {\n                    const toTa = /tamil|தமிழ்/.test(t);\n                    a.push({\n                        type: 'lang', v: toTa ? 'ta' : 'en'\n                    });\n                    m = [T(toTa ? 'சரி, தமிழில் பேசுகிறேன்.' : 'Sure, switching to English.')];\n                    break;\n                }\n                case 'theme':\n                    a.push({\n                        type: 'theme', v: /dark|night/.test(t) ? 'dark' : 'light'\n                    });\n                    m = [T(L(lang, 'Done.', 'முடிந்தது.'))];\n                    break;\n                case 'human':\n                    a.push({\n                        type: 'whatsapp', text: L('en', 'Hi Vaigai Milk, I need help from your team.', 'Hi Vaigai Milk, I need help from your team.') + (ctx.getBasket().length ? '\\nMy basket: ' + ctx.getBasket().map(x => x.q + ' x ' + cat[x.i].n).join(', ') : '')\n                    });\n                    m = [T(L(lang, 'I am opening WhatsApp so you can chat with our team directly.', 'எங்கள் குழுவுடன் நேரடியாகப் பேச வாட்ஸ்அப்பை திறக்கிறேன்.'))];\n                    break;\n                case 'callback':\n                    if (ctx.knownPhone) {\n                        a.push({\n                            type: 'submit_lead', lead: {\n                                type: 'callback', phone: ctx.knownPhone, detail: '', lang, basket: ctx.getBasket().map(x => x.q + ' x ' + cat[x.i].n).join(', ')\n                            }\n                        });\n                        m = [T(L(lang, 'Done. Our team will call you on this number shortly. Reference: {ref}', 'சரி. எங்கள் குழு இதே எண்ணில் விரைவில் அழைக்கும். குறிப்பு எண்: {ref}'))];\n                        break;\n                    }\n                    ns = {\n                        mode: 'lead', step: 'phone', d: { type: 'callback' }\n                    };\n                    m = [T(L(lang, 'Sure. What mobile number can our team call you on?', 'சரி. எந்த மொபைல் எண்ணில் அழைக்கலாம்?'))];\n                    break;\n                case 'bulk':\n                    ns = {\n                        mode: 'lead', step: 'detail', d: { type: 'bulk' }\n                    };\n                    m = [T(L(lang, 'We supply cafes, hotels and caterers in Madurai. Tell me your business name and what you need each day.', 'மதுரையில் கஃபே, ஹோட்டல், கேட்டரிங் நிறுவனங்களுக்கு விநியோகம் செய்கிறோம். உங்கள் நிறுவனப் பெயர், தினசரி தேவையைச் சொல்லுங்கள்.'))];\n                    break;\n                case 'complaint':\n                    ns = {\n                        mode: 'lead', step: 'detail', d: { type: 'complaint' }\n                    };\n                    m = [T(L(lang, 'I am sorry about that. Please tell me what happened (product, date and the problem) and I will get our team to fix it.', 'மன்னிக்கவும். என்ன நடந்தது (பொருள், தேதி, பிரச்சனை) என்று சொல்லுங்கள்; எங்கள் குழு சரிசெய்யும்.'))];\n                    break;\n                case 'status': {\n                    const id = (raw.match(/vgm-\\d{6}-[a-z0-9]{3,6}/i) || [''])[0].toUpperCase();\n                    a.push({\n                        type: 'status', id\n                    });\n                    m = [T(L(lang, 'Checking ' + id + '…', 'சரிபார்க்கிறேன் ' + id + '…'))];\n                    if (!id)\n                        m = [T(L(lang, 'Please send your order number (it looks like VGM-250101-AB12).', 'உங்கள் ஆர்டர் எண்ணை அனுப்புங்கள் (VGM-250101-AB12 போல).'))];\n                    break;\n                }\n                case 'yes':\n                case 'no':\n                    m = [T(L(lang, 'Okay. What would you like to do next?', 'சரி. அடுத்து என்ன செய்யலாம்?')), chips([L(lang, 'Show products', 'பொருட்கள்'), 'products'], [L(lang, 'My basket', 'என் கூடை'), 'basket'])];\n                    break;\n                default: m = [T(L(lang, 'I am not sure I understood. I can help with products, prices, your basket, delivery, daily plans and orders. Or I can connect you to our team.', 'நான் சரியாகப் புரிந்துகொள்ளவில்லை. பொருட்கள், விலை, கூடை, டெலிவரி, தினசரி திட்டம், ஆர்டர் ஆகியவற்றில் உதவ முடியும். அல்லது குழுவுடன் இணைக்கலாம்.')), chips([L(lang, 'Show products', 'பொருட்கள்'), 'products'], [L(lang, 'Talk to the team', 'குழுவுடன் பேச'), 'talk to human'])];\n            }\n            return {\n                intent: I.intent, lang, st: ns, m, a\n            };\n        }\n        return {\n            respond, intentOf, findProducts\n        };\n    }\n    return {\n        create, norm, phoneOf, pinOf, pinOk, AREAS\n    };\n})();\n\nconst CAT=[{\"k\": \"carton\", \"n\": \"Vaigai Fresh milk\", \"nt\": \"வைகை ஃப்ரெஷ் பால்\", \"u\": \"500 ml\", \"p\": 32, \"d\": \"Everyday pasteurised milk in a clean, sealed pack.\", \"dt\": \"தினசரி பாஸ்டரைஸ் பால், சுத்தமான மூடிய பாக்கெட்டில்.\", \"sku\": \"VGM-CARTON-500ml\"}, {\"k\": \"badam\", \"n\": \"Badam milk\", \"nt\": \"பாதாம் பால்\", \"u\": \"250 ml\", \"p\": 55, \"d\": \"Roasted almonds and saffron in chilled, creamy milk.\", \"dt\": \"வறுத்த பாதாமும் குங்குமப்பூவும் சேர்ந்த குளிர்ந்த, கெட்டியான பால்.\", \"sku\": \"VGM-BADAM-250ml\"}, {\"k\": \"ghee\", \"n\": \"Farm ghee\", \"nt\": \"பண்ணை நெய்\", \"u\": \"500 ml\", \"p\": 320, \"d\": \"Golden, grainy and fragrant. Slow-made from fresh cream.\", \"dt\": \"தங்க நிறம், மணம். புதிய கிரீமில் மெதுவாகத் தயாரிக்கப்பட்டது.\", \"sku\": \"VGM-GHEE-500ml\"}, {\"k\": \"curd\", \"n\": \"Set curd\", \"nt\": \"கெட்டித் தயிர்\", \"u\": \"400 g\", \"p\": 60, \"d\": \"Set in a clay pot the traditional way. Thick and cool.\", \"dt\": \"பாரம்பரிய மண்பானையில் உறைய வைக்கப்பட்டது. கெட்டியாக, குளிர்ச்சியாக.\", \"sku\": \"VGM-CURD-400g\"}, {\"k\": \"butter\", \"n\": \"Fresh butter\", \"nt\": \"புதிய வெண்ணெய்\", \"u\": \"200 g\", \"p\": 110, \"d\": \"Cold, creamy and just salty enough.\", \"dt\": \"குளிர்ந்த, மிருதுவான, அளவான உப்புடன்.\", \"sku\": \"VGM-BUTTER-200g\"}, {\"k\": \"hero\", \"n\": \"Glass bottle milk\", \"nt\": \"கண்ணாடி பாட்டில் பால்\", \"u\": \"500 ml\", \"p\": 36, \"d\": \"Full cream milk in returnable glass. Pure and simple.\", \"dt\": \"திருப்பித் தரக்கூடிய கண்ணாடியில் முழு கிரீம் பால். தூய்மை, எளிமை.\", \"sku\": \"VGM-HERO-500ml\"}];\nconst WORD={carton:'vaigai fresh',badam:'badam',ghee:'ghee',curd:'curd',butter:'butter',hero:'glass bottle'};\nconst trunc=(s,n)=>{s=String(s);return s.length>n?s.slice(0,n-1)+'…':s};\nconst waText=(to,body)=>({messaging_product:'whatsapp',to:'91'+to,type:'text',text:{body:trunc(body,3800)}});\nconst waButtons=(to,body,chips)=>({messaging_product:'whatsapp',to:'91'+to,type:'interactive',interactive:{type:'button',body:{text:trunc(body,1000)},action:{buttons:chips.slice(0,3).map(c=>({type:'reply',reply:{id:trunc('say:'+c[1],256),title:trunc(c[0],20)}}))}}});\nconst waList=(to,body,ix,lang)=>({messaging_product:'whatsapp',to:'91'+to,type:'interactive',interactive:{type:'list',body:{text:trunc(body,1000)},action:{button:trunc(lang==='ta'?'சேர்':'Add to basket',20),sections:[{title:trunc(lang==='ta'?'பொருட்கள்':'Products',24),rows:ix.slice(0,10).map(i=>({id:'add:'+i,title:trunc(lang==='ta'?CAT[i].nt:CAT[i].n,24),description:trunc('₹'+CAT[i].p+' · '+CAT[i].u,72)}))}]}}});\n\nconst cfg=$('Config (messages)').first().json,p=$('Parse WhatsApp event').first().json;\nconst row=$input.all().map(i=>i.json).find(r=>r&&String(r.phone)===p.from)||{};\nif(row.last_msg_id&&row.last_msg_id===p.msg_id)return [];\nlet st={mode:null},basket={};try{st=JSON.parse(row.state_json||'{\"mode\":null}')}catch(e){}try{basket=JSON.parse(row.basket_json||'{}')}catch(e){}\nif(row.updated_at&&Date.now()-Date.parse(row.updated_at)>1800000)st={mode:null};\nlet lang=row.lang==='ta'?'ta':'en';\nconst mk=to=>({json:{to,payloads:[],order:null,lead:null,ai:null}});\nif(p.type!=='text'&&p.type!=='interactive'){const o=mk(p.from);o.json.payloads=[waText(p.from,lang==='ta'?'தற்போது உரைச் செய்திகளை மட்டும் படிக்க முடியும். உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள்.':'I can read text messages for now. Please type your question.')];o.json.session={phone:p.from,state_json:JSON.stringify(st),basket_json:JSON.stringify(basket),lang,updated_at:new Date().toISOString(),last_msg_id:p.msg_id};return [o]}\nlet text=p.text;if(text.indexOf('say:')===0)text=text.slice(4);else if(text.indexOf('add:')===0){const i=parseInt(text.slice(4),10);text=CAT[i]?'add 1 '+WORD[CAT[i].k]:'products'}\nconst brain=VaigaiBrain.create({cat:CAT,getBasket:()=>Object.keys(basket).filter(k=>basket[k]>0).map(k=>({i:+k,q:basket[k]})),knownPhone:p.from});\nconst out=brain.respond(text,st,lang);if(out.lang==='ta')lang='ta';\nconst bl=()=>Object.keys(basket).filter(k=>basket[k]>0).map(k=>basket[k]+' x '+CAT[+k].n).join(', ');\nlet order=null,lead=null,handoff=false,statusId='';\n(out.a||[]).forEach(a=>{if(a.type==='add')basket[a.i]=Math.min(99,(basket[a.i]||0)+Math.max(1,a.q|0));else if(a.type==='remove')delete basket[a.i];else if(a.type==='clear')basket={};else if(a.type==='lang')lang=a.v==='ta'?'ta':'en';else if(a.type==='submit_order')order=a.order;else if(a.type==='submit_lead')lead=a.lead;else if(a.type==='whatsapp')handoff=true;else if(a.type==='status')statusId=a.id||''});\nconst yy=new Date(Date.now()+330*60000).toISOString().slice(2,10).replace(/-/g,'');const ref='LD-'+yy+'-'+Math.random().toString(36).slice(2,6).toUpperCase();\nlet msgs=out.m.map(m=>m.t==='text'?{t:'text',x:m.x.replace('{ref}',ref)}:m);\nif(handoff){lead={type:'handoff',phone:p.from,detail:'Customer asked for a person on WhatsApp',lang,basket:bl()};msgs=[{t:'text',x:lang==='ta'?'எங்கள் குழுவுக்குத் தெரிவித்துவிட்டேன். இங்கேயே விரைவில் பதிலளிப்பார்கள்.':'I have alerted our team. They will reply to you here shortly.'}]}\nif(statusId||out.intent==='status'){lead={type:'other',phone:p.from,detail:'Order status request '+statusId,lang,basket:''};msgs=[{t:'text',x:lang==='ta'?'ஆர்டர் '+statusId+' நிலையை குழு சரிபார்த்து இங்கேயே தெரிவிக்கும்.':'I have asked our team to check order '+statusId+' and reply here.'}]}\nif(lead){lead.lead_id=lead.lead_id||ref;lead.source={utm:{},page:'whatsapp'};lead.session_id='wa_'+p.from}\nif(order){order.session_id='wa_'+p.from;order.source={page:'whatsapp',utm:{}};order.payment='cod'}\nconst ai=(out.intent==='unknown'&&!st.mode&&!out.st.mode&&String(cfg.ai_fallback)==='yes')?{message:p.text.slice(0,400),lang,basket:Object.keys(basket).filter(k=>basket[k]>0).map(k=>({sku:CAT[+k].sku,name:CAT[+k].n,qty:basket[k],price:CAT[+k].p})),session_id:'wa_'+p.from}:null;\nconst P=[];if(!ai)for(const m of msgs){if(m.t==='text')P.push({k:'text',body:m.x});else if(m.t==='products'){const rows=m.i.length>1?m.i:m.i;P.push({k:'list',ix:m.i,body:lang==='ta'?'சேர்க்க தட்டுங்கள்:':'Tap to add:'})}else if(m.t==='chips'){const last=[...P].reverse().find(x=>x.k==='text');if(last){last.k='buttons';last.chips=m.c}else P.push({k:'buttons',body:lang==='ta'?'தேர்ந்தெடுங்கள்:':'Choose an option:',chips:m.c})}}\nconst payloads=P.map(x=>x.k==='text'?waText(p.from,x.body):x.k==='buttons'?waButtons(p.from,x.body,x.chips):x.ix.length===1?waButtons(p.from,(lang==='ta'?CAT[x.ix[0]].nt:CAT[x.ix[0]].n)+' ('+CAT[x.ix[0]].u+') ₹'+CAT[x.ix[0]].p,[[lang==='ta'?'சேர்':'Add to basket','add 1 '+WORD[CAT[x.ix[0]].k]]]):waList(p.from,x.body,x.ix,lang));\nconst sess={phone:p.from,state_json:JSON.stringify(out.st&&out.st.mode?out.st:{mode:null}),basket_json:JSON.stringify(basket),lang,updated_at:new Date().toISOString(),last_msg_id:p.msg_id};\nreturn [{json:{to:p.from,payloads,order,lead,ai,session:sess}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "dec2869f-4213-493c-8336-f4a21052be75",
+      "name": "Bot Brain",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (messages)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "WA Sessions"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "phone": "={{ $json.session.phone }}",
+            "state_json": "={{ $json.session.state_json }}",
+            "basket_json": "={{ $json.session.basket_json }}",
+            "lang": "={{ $json.session.lang }}",
+            "updated_at": "={{ $json.session.updated_at }}",
+            "last_msg_id": "={{ $json.session.last_msg_id }}"
+          },
+          "matchingColumns": [
+            "phone"
+          ],
+          "schema": []
+        }
+      },
+      "id": "95710b01-e1ab-4eff-8b7a-e7fc294c9ed4",
+      "name": "Save session",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2000,
+        380
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return ($input.first().json.payloads||[]).map(p=>({json:p}));",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "5e137cd1-2db4-4f2d-be21-fd9d761cf4eb",
+      "name": "Explode messages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config (messages)').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config (messages)').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "9f7be540-d586-4f37-b705-90f1de99515c",
+      "name": "Send WhatsApp message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2480,
+        540
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "541234a6-8ee6-436b-9f91-8aaf93bba54a",
+              "leftValue": "={{ $json.order ? true : false }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "29552707-6ea5-4572-a625-58b69e96abf2",
+      "name": "Has order?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config (messages)').first().json.base_url }}/webhook/vaigai-order",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-vaigai-key",
+              "value": "={{ $('Config (messages)').first().json.api_key }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Bot Brain').first().json.order) }}",
+        "options": {}
+      },
+      "id": "3b1be683-b94f-4f62-bdb9-21d58f92719f",
+      "name": "POST order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        700
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const trunc=(s,n)=>{s=String(s);return s.length>n?s.slice(0,n-1)+'…':s};\nconst waText=(to,body)=>({messaging_product:'whatsapp',to:'91'+to,type:'text',text:{body:trunc(body,3800)}});\nconst waButtons=(to,body,chips)=>({messaging_product:'whatsapp',to:'91'+to,type:'interactive',interactive:{type:'button',body:{text:trunc(body,1000)},action:{buttons:chips.slice(0,3).map(c=>({type:'reply',reply:{id:trunc('say:'+c[1],256),title:trunc(c[0],20)}}))}}});\nconst waList=(to,body,ix,lang)=>({messaging_product:'whatsapp',to:'91'+to,type:'interactive',interactive:{type:'list',body:{text:trunc(body,1000)},action:{button:trunc(lang==='ta'?'சேர்':'Add to basket',20),sections:[{title:trunc(lang==='ta'?'பொருட்கள்':'Products',24),rows:ix.slice(0,10).map(i=>({id:'add:'+i,title:trunc(lang==='ta'?CAT[i].nt:CAT[i].n,24),description:trunc('₹'+CAT[i].p+' · '+CAT[i].u,72)}))}]}}});\nconst CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\nconst to=$('Bot Brain').first().json.to,r=$input.first().json,lang=$('Bot Brain').first().json.session.lang;\nconst body=r&&r.ok&&r.order_id?(lang==='ta'?'ஆர்டர் '+r.order_id+' பதிவானது. மொத்தம் ₹'+r.total+'. டெலிவரி: '+(r.delivery_date||'நாளை')+'. டெலிவரியில் பணம். நன்றி!':'Your order '+r.order_id+' is placed. Total ₹'+r.total+'. Delivery: '+(r.delivery_date||'tomorrow')+'. Pay on delivery. Thank you!'):(lang==='ta'?'மன்னிக்கவும், ஆர்டரை பதிவு செய்ய முடியவில்லை. எங்கள் குழு உங்களை தொடர்பு கொள்ளும்.':'Sorry, I could not place the order automatically. Our team will contact you here.');\nreturn [{json:waText(to,body)}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "168e1200-3c73-48b4-88ce-cbc696e4cbf3",
+      "name": "Order confirmation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2480,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c10a3579-cf82-4fb9-bc6f-5a2b370c14c0",
+              "leftValue": "={{ $json.lead ? true : false }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "35ced64b-750e-4405-b19e-964dd8990e21",
+      "name": "Has lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config (messages)').first().json.base_url }}/webhook/vaigai-lead",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-vaigai-key",
+              "value": "={{ $('Config (messages)').first().json.api_key }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Bot Brain').first().json.lead) }}",
+        "options": {}
+      },
+      "id": "f0314fbf-aec5-4927-abb8-0765516480d1",
+      "name": "POST lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        860
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "e8103060-bf89-49db-974f-e3bbbb194e4e",
+              "leftValue": "={{ $json.ai ? true : false }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "048ca16c-7928-4567-b8e4-973604534b3c",
+      "name": "Needs AI?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config (messages)').first().json.base_url }}/webhook/vaigai-assistant",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-vaigai-key",
+              "value": "={{ $('Config (messages)').first().json.api_key }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Bot Brain').first().json.ai) }}",
+        "options": {}
+      },
+      "id": "bfe7f4a1-5958-4a77-be62-3a8888e94dbf",
+      "name": "Ask AI assistant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2240,
+        1020
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const trunc=(s,n)=>{s=String(s);return s.length>n?s.slice(0,n-1)+'…':s};\nconst waText=(to,body)=>({messaging_product:'whatsapp',to:'91'+to,type:'text',text:{body:trunc(body,3800)}});\nconst waButtons=(to,body,chips)=>({messaging_product:'whatsapp',to:'91'+to,type:'interactive',interactive:{type:'button',body:{text:trunc(body,1000)},action:{buttons:chips.slice(0,3).map(c=>({type:'reply',reply:{id:trunc('say:'+c[1],256),title:trunc(c[0],20)}}))}}});\nconst waList=(to,body,ix,lang)=>({messaging_product:'whatsapp',to:'91'+to,type:'interactive',interactive:{type:'list',body:{text:trunc(body,1000)},action:{button:trunc(lang==='ta'?'சேர்':'Add to basket',20),sections:[{title:trunc(lang==='ta'?'பொருட்கள்':'Products',24),rows:ix.slice(0,10).map(i=>({id:'add:'+i,title:trunc(lang==='ta'?CAT[i].nt:CAT[i].n,24),description:trunc('₹'+CAT[i].p+' · '+CAT[i].u,72)}))}]}}});\nconst CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\nconst bb=$('Bot Brain').first().json,to=bb.to,lang=bb.ai?bb.ai.lang:'en',r=$input.first().json;\nlet reply=String(r.reply||'').trim();if(!reply)reply=lang==='ta'?'மன்னிக்கவும், இப்போது பதிலளிக்க முடியவில்லை. எங்கள் குழு உதவும்.':'Sorry, I could not answer that right now. Our team will help you here.';\nconst chips=(Array.isArray(r.quick_replies)?r.quick_replies:[]).slice(0,3).map(q=>[String(q),String(q)]);\nconst out=[{json:chips.length?waButtons(to,reply,chips):waText(to,reply)}];\n(r.actions||[]).forEach(a=>{if(a.type==='show_products'&&Array.isArray(a.skus)){const ix=a.skus.map(s=>Object.keys(CATALOG).indexOf(s)).filter(i=>i>=0);if(ix.length)out.push({json:{messaging_product:'whatsapp',to:'91'+to,type:'text',text:{body:ix.map(i=>'• '+Object.values(CATALOG)[i].n+' ('+Object.values(CATALOG)[i].u+') ₹'+Object.values(CATALOG)[i].p).join('\\n')}}})}});\nreturn out;",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "5fde2f3e-64df-45eb-b156-a70c1f0a8bbc",
+      "name": "AI reply to WhatsApp",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2480,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "content": "WHATSAPP ASSISTANT (chat to order)\nSame brain as the website. Customers message your WhatsApp Business number: ask prices, add products, check delivery, place a cash-on-delivery order, request a callback or report a problem. Their number is used automatically (no phone question). Unknown questions go to the AI agent (workflow 01) when ai_fallback is yes.\nSetup: Meta developer app, WhatsApp Cloud API, webhook URL = this workflow's /webhook/vaigai-whatsapp, verify token = wa_verify_token, subscribe to 'messages'. Messages are verified with your app secret (wa_app_secret). Create a 'WA Sessions' tab from sheets/WA Sessions.csv. Replies inside 24 hours need no template.\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 300,
+        "width": 800
+      },
+      "id": "dd2f2d4f-bf1d-4ae4-911f-5183f1479138",
+      "name": "Note e2f9",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -160
+      ]
+    }
+  ],
+  "connections": {
+    "WhatsApp Verify": {
+      "main": [
+        [
+          {
+            "node": "Config (verify hook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (verify hook)": {
+      "main": [
+        [
+          {
+            "node": "Verify token OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify token OK?": {
+      "main": [
+        [
+          {
+            "node": "Respond Challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Forbidden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Message Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (messages)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (messages)": {
+      "main": [
+        [
+          {
+            "node": "HMAC body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HMAC body": {
+      "main": [
+        [
+          {
+            "node": "Check signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check signature": {
+      "main": [
+        [
+          {
+            "node": "Signature valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signature valid?": {
+      "main": [
+        [
+          {
+            "node": "Respond 200",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Bad Signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond 200": {
+      "main": [
+        [
+          {
+            "node": "Parse WhatsApp event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse WhatsApp event": {
+      "main": [
+        [
+          {
+            "node": "Read WA Sessions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read WA Sessions": {
+      "main": [
+        [
+          {
+            "node": "Bot Brain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bot Brain": {
+      "main": [
+        [
+          {
+            "node": "Save session",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Explode messages",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Has order?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Has lead?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Needs AI?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explode messages": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has order?": {
+      "main": [
+        [
+          {
+            "node": "POST order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST order": {
+      "main": [
+        [
+          {
+            "node": "Order confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order confirmation": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has lead?": {
+      "main": [
+        [
+          {
+            "node": "POST lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs AI?": {
+      "main": [
+        [
+          {
+            "node": "Ask AI assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask AI assistant": {
+      "main": [
+        [
+          {
+            "node": "AI reply to WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI reply to WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

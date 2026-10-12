@@ -1,0 +1,8 @@
+node_modules/
+frontend/website/dist/
+tests/.artifacts/
+backend/n8n/configured/
+backend/n8n/config.json
+__pycache__/
+*.pyc
+.DS_Store

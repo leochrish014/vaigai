@@ -1,0 +1,856 @@
+{
+  "name": "Vaigai 04 · Leads, complaints and escalation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-lead",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "d5d303fc-ea7c-4cc7-ac6a-6b8f8536bcd4",
+      "name": "Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        260
+      ],
+      "webhookId": "bc3ce7ed-46f6-498c-864f-ade3b9637b62"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "29e66c8e-24a2-42f9-8efd-e74d5add08cf",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "ace9b2e4-bd56-4079-a142-7851afa85ab4",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "c22c53db-e798-4063-a817-15af0e3a78ac",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "b7251c3c-f569-40d7-9d66-bd373c0dcd02",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "e8d55fef-d6a3-40f8-a519-5302e1c0d8dd",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "e7ec1caa-f00a-4526-ad09-dae5166a6637",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "952c63e5-d3a6-43ac-92bb-950579b40091",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "9ce7eefb-a27d-4164-8071-6ad697e0bef0",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "e0cd6dde-2178-496c-b491-4fff26153f40",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "8ba519e1-5353-41b1-a4bb-e0ebf71110da",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "55d7b7e8-ed6a-4012-9f15-4e766073dfb7",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "e874dd56-7a9a-409e-872b-e22c831859de",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "4e4a1fe6-e3ab-4339-b9e5-8642a9ebbddf",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "1311d9bc-7ff7-40eb-a2fc-bfe44a70586d",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "17133703-56eb-435f-b739-71c0639befe2",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "d109beaf-8201-4944-97c3-af84722eff58",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "eda1c845-84d0-4596-a315-1b1054f6e0e3",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "a0151bdb-e30f-4538-b610-00d7b6e7bc8e",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "56c5dff7-5bf6-4ca7-8ea6-b1a9a66909cb",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "cd4af714-4fb8-49c7-842f-791f286fa929",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "efff4521-56a7-46dc-a69e-723457eb5ca1",
+      "name": "Key OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "a6ec01d2-2fd3-4da9-827c-5f4de3631253",
+      "name": "Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ist=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const addDays=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst safe=s=>/^[=+\\-@]/.test(String(s))?\"'\"+s:s;\nconst b=$input.first().json.body||{};const TYPES=['callback','bulk','complaint','subscription','handoff','feedback','other'];\nconst type=TYPES.indexOf(b.type)>=0?b.type:'other';let ph=String(b.phone||'').replace(/[\\s()-]/g,'');if(/^\\+?91[6-9]\\d{9}$/.test(ph))ph=ph.replace(/^\\+?91/,'');\nif(!/^[6-9]\\d{9}$/.test(ph))return [{json:{ok:false,response:{ok:false,error:'valid 10 digit mobile required'}}}];\nconst high=['complaint','bulk','handoff'].indexOf(type)>=0;const priority=high?'high':'medium';\nconst utm=(b.source&&b.source.utm)||{};const clean=s=>String(s==null?'':s).replace(/[\\u0000-\\u001f]/g,' ').trim();\nconst id=/^LD-\\d{6}-[A-Z0-9]{4}$/.test(String(b.lead_id||''))?b.lead_id:('LD-'+ymd(ist()).slice(2).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase());\nconst row={lead_id:id,created_at:new Date().toISOString(),type,priority,status:'new',phone:ph,detail:safe(clean(b.detail).slice(0,500)),basket:safe(clean(b.basket).slice(0,300)),language:b.lang==='ta'?'ta':'en',session_id:clean(b.session_id).slice(0,64),utm_source:clean(utm.utm_source),sla_minutes:high?15:60,assignee:'',note:'',updated_at:''};\nreturn [{json:{ok:true,row,high,alert_text:'New '+priority.toUpperCase()+' '+type+' lead '+id+'\\nPhone: '+ph+'\\n'+row.detail+(row.basket?'\\nBasket: '+row.basket:'')+'\\nRespond within '+row.sla_minutes+' min',response:{ok:true,lead_id:id}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "9fd3818a-f1f9-4623-a6e8-cf1c24927f19",
+      "name": "Normalize Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "e265ac1f-6bab-48f2-831d-dfd816b2c223",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a1402200-59fe-4e1a-98c9-a4a781f6f05a",
+      "name": "Lead valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "7fc1cb5c-7c80-4862-81c6-3e375a913158",
+      "name": "Respond Invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $json.row.lead_id }}",
+            "created_at": "={{ $json.row.created_at }}",
+            "type": "={{ $json.row.type }}",
+            "priority": "={{ $json.row.priority }}",
+            "status": "={{ $json.row.status }}",
+            "phone": "={{ $json.row.phone }}",
+            "detail": "={{ $json.row.detail }}",
+            "basket": "={{ $json.row.basket }}",
+            "language": "={{ $json.row.language }}",
+            "session_id": "={{ $json.row.session_id }}",
+            "utm_source": "={{ $json.row.utm_source }}",
+            "sla_minutes": "={{ $json.row.sla_minutes }}",
+            "assignee": "={{ $json.row.assignee }}",
+            "note": "={{ $json.row.note }}",
+            "updated_at": "={{ $json.row.updated_at }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "1ce65e41-5e85-4920-a467-d9b016dc4f3a",
+      "name": "Save to Leads sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1140,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Normalize Lead').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "3b721dbf-29fd-4bdd-ae6f-9ea95a056e84",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1380,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "50c3bdb7-40d1-45a8-a5f3-1cda9360e8c7",
+              "leftValue": "={{ $('Normalize Lead').first().json.high }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "71470879-ca05-4114-ba06-396008dd5ccc",
+      "name": "High priority?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Config').first().json.telegram_chat_id }}",
+        "text": "={{ $('Normalize Lead').first().json.alert_text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "a7b247a2-9e17-4e86-bc3d-0e375893f367",
+      "name": "Telegram: new lead alert (optional)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1620,
+        220
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "d1880ed7-42a1-4f10-9f9b-3d3afb21bde7",
+              "leftValue": "={{ $('Config').first().json.wa_token }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "rightValue": "PASTE_WHATSAPP_ACCESS_TOKEN"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3aaf6ba0-fed1-4977-8620-e66408c84d40",
+      "name": "WhatsApp configured?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1620,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({messaging_product:'whatsapp',to:'91'+$('Normalize Lead').first().json.row.phone,type:'template',template:{name:'lead_received',language:{code:'en'},components:[{type:'body',parameters:[{type:'text',text:$('Normalize Lead').first().json.row.lead_id}]}]} }) }}",
+        "options": {}
+      },
+      "id": "13490fa7-e807-4c6e-978e-da7c4fa045bf",
+      "name": "WhatsApp: customer auto-reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1860,
+        400
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/15 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "83010377-b28a-4e87-ac7d-f47d37aef8af",
+      "name": "Every 15 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b38ec490-f5f7-4cd8-b76b-03e82bc699a5",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "182066a7-d9b9-494d-82e2-6521e73de2ae",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "af46eeb8-a292-4239-b7d2-199206f2a089",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "7b77503c-7d4b-49f9-bcdd-1556dd3cbd2b",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "b21633c6-c8b4-4b21-b39e-018090656ffa",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "25dbb89b-4a02-48b4-9563-171c441b608d",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "f4432903-f23a-4b62-b640-db08e81506cd",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "1edf19a1-2c94-49e5-9329-31da5c7a6edb",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "de4648ce-4c9a-49e0-84c0-5599aea87f8e",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "7caabab2-67fa-4a91-a319-02516aeeeb88",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "fc2a305a-4b56-44cb-82bf-38665371de58",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "30128d4a-01dd-4504-bb1b-79375925d624",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "1ea088ef-4d8f-4787-880f-76523d62793b",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "c0cf273c-5ed0-45de-914a-bbbc978e7f04",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "d6d06f6f-4c7c-4919-9e8f-7be7256066b4",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "950d6737-1039-404d-bc83-543ac97aa71b",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "5c7b1405-7be5-436d-a718-3c34126a0921",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "58e4adb8-43c8-4f80-b66d-5c839698daea",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "526444bd-6be5-424c-86b0-44707bca7e2a",
+      "name": "Config (escalation)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (escalation)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "options": {}
+      },
+      "id": "89bd9cd1-bcf7-4cc0-87a2-5e305b9d80fb",
+      "name": "Read Leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        700
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const now=Date.now();\nconst rows=$input.all().map(i=>i.json).filter(r=>String(r.status||'').toLowerCase()==='new'&&String(r.priority||'').toLowerCase()==='high').filter(r=>{const t=Date.parse(r.created_at);if(!t)return false;const age=(now-t)/60000,sla=+r.sla_minutes||15;return age>=sla&&age<sla+15});\nif(!rows.length)return [];\nreturn [{json:{text:'ESCALATION: '+rows.length+' high priority lead(s) still NEW past SLA\\n'+rows.map(r=>r.lead_id+' '+r.type+' '+r.phone).join('\\n')}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "9dbbcb66-227a-461b-aace-6e3fe1041b62",
+      "name": "Find Overdue Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Config (escalation)').first().json.manager_telegram_chat_id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5adabf58-12f7-42af-afca-bcfbc32c386b",
+      "name": "Telegram: ESCALATE to manager (optional)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        700
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram account"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "LEADS AND ESCALATION\nReceives callback, bulk, complaint, subscription and handoff requests from the website assistant. High priority (complaint, bulk, handoff) alerts staff at once and must be answered within 15 minutes; every 15 minutes overdue ones are escalated to the manager once. Create a 'Leads' tab using sheets/Leads.csv. Set status to contacted when handled.\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 260,
+        "width": 640
+      },
+      "id": "51a955ce-af5f-4549-a3cf-1e2bacef4f38",
+      "name": "Note 38f3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        20
+      ]
+    }
+  ],
+  "connections": {
+    "Lead Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Key OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK?": {
+      "main": [
+        [
+          {
+            "node": "Normalize Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Lead": {
+      "main": [
+        [
+          {
+            "node": "Lead valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead valid?": {
+      "main": [
+        [
+          {
+            "node": "Save to Leads sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Leads sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "High priority?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High priority?": {
+      "main": [
+        [
+          {
+            "node": "Telegram: new lead alert (optional)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp configured?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp configured?": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: customer auto-reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every 15 minutes": {
+      "main": [
+        [
+          {
+            "node": "Config (escalation)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (escalation)": {
+      "main": [
+        [
+          {
+            "node": "Read Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Leads": {
+      "main": [
+        [
+          {
+            "node": "Find Overdue Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Overdue Leads": {
+      "main": [
+        [
+          {
+            "node": "Telegram: ESCALATE to manager (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

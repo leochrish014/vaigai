@@ -1,0 +1,1 @@
+order_id,created_at,status,customer_name,phone,address,area,pincode,slot,delivery_date,items,total,payment,payment_id,paid_at,invoice_no,referral_code,rider,delivered_at,collected_inr,notes,source,utm_source,utm_campaign,language,session_id,items_json

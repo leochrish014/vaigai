@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>GST Invoice | Vaigai Milk</title>
+<script>
+window.VAIGAI_CONFIG = { invoiceApi: "" }; /* set to https://YOUR-N8N-HOST/webhook */
+</script>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef3ef;color:#0a2a24;font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+.wrap{max-width:900px;margin:24px auto;padding:0 14px}.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.bar button{min-height:44px;padding:0 20px;border-radius:99px;border:0;background:#e3b341;font-weight:700;color:#0a2a24;cursor:pointer}
+.sheet{background:#fff;border:1px solid #d5e0d0;border-radius:14px;padding:28px}.top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-bottom:2px solid #0b7a3e;padding-bottom:14px}
+h1{margin:0;font-size:1.6rem;color:#0b5d3a}.muted{color:#4a645c;font-size:.9rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}@media(max-width:620px){.grid{grid-template-columns:1fr}}
+h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#4a645c;margin:0 0 4px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:640px}th,td{padding:8px 6px;border-bottom:1px solid #e3ebe4;text-align:right}th:nth-child(2),td:nth-child(2){text-align:left}th{background:#f1f6f2;font-size:.76rem}
+.tot{margin-left:auto;margin-top:14px;max-width:340px;width:100%}.tot div{display:flex;justify-content:space-between;padding:4px 0}.tot .g{border-top:2px solid #0b7a3e;font-weight:800;font-size:1.1rem;margin-top:4px;padding-top:8px}
+.words{margin-top:12px;font-size:.9rem}.note{margin-top:18px;font-size:.78rem;color:#4a645c;border-top:1px dashed #cdd9cf;padding-top:10px}.paid{display:inline-block;border:2px solid #0b7a3e;color:#0b7a3e;border-radius:6px;padding:2px 10px;font-weight:800;letter-spacing:.1em;transform:rotate(-4deg)}
+#msg{padding:40px;text-align:center}
+@media print{body{background:#fff}.bar{display:none}.wrap{margin:0;max-width:none;padding:0}.sheet{border:0;border-radius:0;padding:0}}
+</style></head><body><div class="wrap"><div class="bar"><span class="muted">GST invoice</span><button type="button" id="pr">Print or save as PDF</button></div><div class="sheet" id="sheet"><div id="msg" role="status">Loading invoice…</div></div></div>
+<script>
+(function () {
+    const $ = s => document.querySelector(s), q = new URLSearchParams(location.search);
+    const apiQ = q.get('api'), API = (apiQ && /^http:\/\/localhost(:\d+)?\/webhook$/.test(apiQ)) ? apiQ : ((window.VAIGAI_CONFIG || {}).invoiceApi || '');
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+    const inr = n => '₹' + (+n).toLocaleString('en-IN', {
+        minimumFractionDigits: 2, maximumFractionDigits: 2
+    });
+    const O = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'], Tn = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    const two = n => n < 20 ? O[n] : Tn[Math.floor(n / 10)] + (n % 10 ? ' ' + O[n % 10] : '');
+    const three = n => (n > 99 ? O[Math.floor(n / 100)] + ' Hundred' + (n % 100 ? ' ' : '') : '') + (n % 100 ? two(n % 100) : '');
+    function words(n) {
+        n = Math.round(n);
+        if (n === 0)
+            return 'Zero';
+        const p = [[10000000, 'Crore'], [100000, 'Lakh'], [1000, 'Thousand']];
+        let o = [];
+        for (const [v, l] of p) {
+            if (n >= v) {
+                o.push(three(Math.floor(n / v)) + ' ' + l);
+                n %= v;
+            }
+        }
+        if (n)
+            o.push(three(n));
+        return o.join(' ');
+    }
+    window.__words = words;
+    $('#pr').onclick = () => print();
+    const id = q.get('id'), t = q.get('t');
+    if (!id || !t || !API) {
+        $('#msg').textContent = 'This invoice link is incomplete. Please use the link from your order message.';
+        return;
+    }
+    fetch(API + '/vaigai-invoice?id=' + encodeURIComponent(id) + '&t=' + encodeURIComponent(t)).then(r => r.json()).then(v => {
+        if (!v.found) {
+            $('#msg').textContent = 'Invoice not found. Please check the link or contact us on WhatsApp.';
+            return;
+        }
+        const s = v.seller, rows = v.lines.map((l, i) => '<tr><td>' + (i + 1) + '</td><td>' + esc(l.name) + '<br><span class="muted">' + esc(l.desc || '') + '</span></td><td>' + esc(l.hsn) + '</td><td>' + l.qty + '</td><td>' + inr(l.unit_price) + '</td><td>' + inr(l.taxable) + '</td><td>' + l.rate + '%</td><td>' + inr(l.cgst + l.sgst + l.igst) + '</td><td>' + inr(l.gross) + '</td></tr>').join('');
+        const tax = v.igst ? '<div><span>IGST</span><span>' + inr(v.igst) + '</span></div>' : '<div><span>CGST</span><span>' + inr(v.cgst) + '</span></div><div><span>SGST</span><span>' + inr(v.sgst) + '</span></div>';
+        $('#sheet').innerHTML = '<div class="top"><div><h1>' + esc(s.name) + '</h1><div class="muted">' + esc(s.address) + '<br>GSTIN: ' + esc(s.gstin) + ' · FSSAI: ' + esc(s.fssai) + '<br>' + esc(s.phone) + ' · ' + esc(s.email) + '</div></div><div style="text-align:right"><div style="font-weight:800;font-size:1.2rem">TAX INVOICE</div><div class="muted">Invoice no: <b>' + esc(v.invoice_no) + '</b><br>Date: ' + esc(v.invoice_date) + '<br>Order: ' + esc(v.order_id) + '</div><div style="margin-top:8px"><span class="paid">PAID</span></div></div></div>'
+            + '<div class="grid"><div><h2>Billed to</h2><b>' + esc(v.customer.name) + '</b><br>' + esc(v.customer.address) + '<br><span class="muted">Mobile ' + esc(v.customer.phone) + '</span></div><div><h2>Supply</h2>Place of supply: ' + esc(v.place_of_supply) + '<br><span class="muted">Payment: ' + esc(v.payment_mode) + ' · Ref ' + esc(v.payment_id) + '</span></div></div>'
+            + '<div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>HSN</th><th>Qty</th><th>Rate (incl. GST)</th><th>Taxable value</th><th>GST</th><th>Tax amount</th><th>Amount</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+            + '<div class="tot"><div><span>Taxable value</span><span>' + inr(v.taxable_total) + '</span></div>' + tax + (v.round_off ? '<div><span>Round off</span><span>' + inr(v.round_off) + '</span></div>' : '') + '<div class="g"><span>Total</span><span>' + inr(v.total) + '</span></div></div>'
+            + '<div class="words">Amount in words: <b>Rupees ' + esc(words(v.total)) + ' Only</b></div><div class="note">This is a computer-generated invoice. Prices shown on the website are MRP and include GST. Goods once delivered can be returned only if damaged or spoilt; contact us within 24 hours.</div>';
+        document.title = 'Invoice ' + v.invoice_no + ' | Vaigai Milk';
+    }).catch(() => {
+        $('#msg').textContent = 'Could not load the invoice right now. Please try again.';
+    });
+})();
+</script></body></html>

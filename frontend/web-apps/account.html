@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>My account | Vaigai Milk</title>
+<script>
+window.VAIGAI_CONFIG = {
+    accountApi: "", orderWebhook: "", webhookKey: "", siteUrl: "/"
+}; /* accountApi = https://YOUR-N8N-HOST/webhook */
+(function () {
+    var t;
+    try {
+        t = localStorage.getItem('vaigai-theme');
+    }
+    catch (e) { }
+    if (t !== 'dark' && t !== 'light')
+        t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{--bg:#f7f5ee;--card:#fff;--ink:#0a2a24;--muted:#46605a;--line:rgba(10,42,36,.16);--accent:#0e6b3a;--gold:#e3b341;color-scheme:light}
+:root[data-theme=dark]{--bg:#06303a;--card:#0c3d48;--ink:#eaf5f0;--muted:#a9c7be;--line:rgba(255,255,255,.2);--accent:#46d27a;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Tamil',sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 60px}header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}header a{color:var(--ink);font-weight:800;text-decoration:none;font-size:1.2rem}
+button,input,select{font:inherit;color:inherit}.btn{min-height:44px;border-radius:99px;border:1px solid var(--line);background:var(--card);padding:0 18px;font-weight:600;cursor:pointer}.btn.pri{background:var(--gold);border-color:var(--gold);color:#0a2a24}.btn.grn{background:#0b7a3e;border-color:#0b7a3e;color:#fff}.btn.sm{padding:0 14px;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0}h1{font-size:1.5rem;margin:0 0 6px}h2{font-size:1.1rem;margin:22px 0 4px}label{display:block;font-weight:600;margin:10px 0 4px}input,select{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:0 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.muted{color:var(--muted);font-size:.9rem}.tag{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.78rem;font-weight:700;background:rgba(14,107,58,.14);color:var(--accent)}.tag.warn{background:rgba(227,179,65,.25);color:#7a4f00}[data-theme=dark] .tag.warn{color:#e3b341}
+#st{min-height:1.5em;margin:8px 0;font-weight:600}#st.err{color:#c0392b}[data-theme=dark] #st.err{color:#ff8a7a}#st.ok{color:var(--accent)}.hide{display:none!important}
+</style></head><body><div class="wrap">
+<header><a href="/" id="home">Vaigai Milk</a><div class="row"><button class="btn sm" id="lang" type="button" aria-label="Switch language">தமிழ்</button><button class="btn sm hide" id="out" type="button">Log out</button></div></header>
+<div id="st" role="status" aria-live="polite"></div>
+<section id="login" class="card"><h1 id="t-login">My account</h1><p class="muted" id="t-sub">Log in with your mobile number. We send a 6 digit code on WhatsApp.</p>
+<form id="f-phone"><label for="ph" id="l-ph">Mobile number</label><input id="ph" inputmode="numeric" autocomplete="tel" maxlength="14" placeholder="98765 43210"><div class="row" style="margin-top:12px"><button class="btn pri" type="submit" id="b-send">Send code</button></div></form>
+<form id="f-otp" class="hide"><label for="otp" id="l-otp">6 digit code</label><input id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••"><div class="row" style="margin-top:12px"><button class="btn pri" type="submit" id="b-ver">Verify and log in</button><button class="btn" type="button" id="b-back">Change number</button></div></form></section>
+<section id="dash" class="hide"><div class="card"><h1 id="hello"></h1><span class="muted" id="who"></span></div>
+<h2 id="t-subs">My daily plans</h2><div id="subs"></div><h2 id="t-orders">My orders</h2><div id="orders"></div>
+<div id="rep" class="card hide" role="dialog" aria-labelledby="rep-t"><h2 id="rep-t" style="margin-top:0">Repeat this order</h2><p id="rep-i" class="muted"></p><label for="slot" id="l-slot">Delivery time</label><select id="slot"><option>By 5:30 AM</option><option>6:30-7:30 AM</option></select><div class="row" style="margin-top:12px"><button class="btn grn" id="rep-go" type="button">Place order</button><button class="btn" id="rep-x" type="button">Cancel</button></div></div></section>
+</div>
+<script>
+(function () {
+    const $ = s => document.querySelector(s), C = window.VAIGAI_CONFIG || {}, q = new URLSearchParams(location.search), aq = q.get('api');
+    const API = (aq && /^http:\/\/localhost(:\d+)?\/webhook$/.test(aq)) ? aq : (C.accountApi || ''), ORDER = (aq && /^http:\/\/localhost/.test(aq)) ? aq + '/vaigai-order' : (C.orderWebhook || ''), KEY = q.get('key') && aq ? q.get('key') : (C.webhookKey || '');
+    const D = {
+        en: {
+            login: 'My account', sub: 'Log in with your mobile number. We send a 6 digit code on WhatsApp.', ph: 'Mobile number', send: 'Send code', otp: '6 digit code', ver: 'Verify and log in', back: 'Change number', out: 'Log out', subs: 'My daily plans', orders: 'My orders', hello: 'Hello', rep: 'Repeat order', slot: 'Delivery time', place: 'Place order', cancel: 'Cancel', pause: 'Pause', resume: 'Resume', skipT: 'Skip tomorrow', skipD: 'Skip a date', cancelP: 'Cancel plan', none: 'No orders yet.', nosub: 'No daily plan yet. Ask our assistant to set one up.', sent: 'Code sent. Check WhatsApp.', bad: 'Please enter a valid 10 digit mobile number.', fail: 'Something went wrong. Please try again.', exp: 'Your session ended. Please log in again.', done: 'Order placed', skips: 'Skipped dates'
+        },
+        ta: {
+            login: 'என் கணக்கு', sub: 'மொபைல் எண்ணுடன் உள்நுழையுங்கள். வாட்ஸ்அப்பில் 6 இலக்கக் குறியீடு அனுப்புவோம்.', ph: 'மொபைல் எண்', send: 'குறியீடு அனுப்பு', otp: '6 இலக்கக் குறியீடு', ver: 'சரிபார்த்து உள்நுழை', back: 'எண்ணை மாற்று', out: 'வெளியேறு', subs: 'என் தினசரி திட்டங்கள்', orders: 'என் ஆர்டர்கள்', hello: 'வணக்கம்', rep: 'மீண்டும் ஆர்டர்', slot: 'டெலிவரி நேரம்', place: 'ஆர்டர் செய்', cancel: 'ரத்து', pause: 'இடைநிறுத்து', resume: 'தொடர்', skipT: 'நாளை தவிர்', skipD: 'ஒரு தேதியைத் தவிர்', cancelP: 'திட்டத்தை ரத்து செய்', none: 'ஆர்டர்கள் இல்லை.', nosub: 'தினசரி திட்டம் இல்லை. எங்கள் உதவியாளரிடம் கேளுங்கள்.', sent: 'குறியீடு அனுப்பப்பட்டது. வாட்ஸ்அப்பைப் பாருங்கள்.', bad: 'சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடுங்கள்.', fail: 'ஏதோ தவறு. மீண்டும் முயலுங்கள்.', exp: 'அமர்வு முடிந்தது. மீண்டும் உள்நுழையுங்கள்.', done: 'ஆர்டர் பதிவானது', skips: 'தவிர்த்த தேதிகள்'
+        }
+    };
+    let L = 'en';
+    try {
+        L = localStorage.getItem('vaigai-lang') === 'ta' ? 'ta' : 'en';
+    }
+    catch (e) { }
+    const t = k => D[L][k] || k, esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+    let phone = '', token = '', data = null, repOrder = null;
+    try {
+        token = localStorage.getItem('vaigai-token') || '';
+        phone = localStorage.getItem('vaigai-phone') || '';
+    }
+    catch (e) { }
+    const st = (m, c) => {
+        const e = $('#st');
+        e.textContent = m || '';
+        e.className = c || '';
+    };
+    const norm = s => {
+        const d = String(s).replace(/\D/g, '').slice(-10);
+        return /^[6-9]\d{9}$/.test(d) ? d : '';
+    };
+    function labels() {
+        document.documentElement.lang = L === 'ta' ? 'ta' : 'en-IN';
+        $('#lang').textContent = L === 'ta' ? 'EN' : 'தமிழ்';
+        $('#t-login').textContent = t('login');
+        $('#t-sub').textContent = t('sub');
+        $('#l-ph').textContent = t('ph');
+        $('#b-send').textContent = t('send');
+        $('#l-otp').textContent = t('otp');
+        $('#b-ver').textContent = t('ver');
+        $('#b-back').textContent = t('back');
+        $('#out').textContent = t('out');
+        $('#t-subs').textContent = t('subs');
+        $('#t-orders').textContent = t('orders');
+        $('#rep-t').textContent = t('rep');
+        $('#l-slot').textContent = t('slot');
+        $('#rep-go').textContent = t('place');
+        $('#rep-x').textContent = t('cancel');
+        if (data)
+            draw();
+    }
+    const call = async (path, opt = {}) => {
+        const r = await fetch(API + path, Object.assign({ headers: Object.assign({ 'Content-Type': 'application/json' }, opt.key ? { 'x-vaigai-key': KEY } : {}, opt.auth ? { 'x-vaigai-token': token } : {}) }, opt.body ? {
+            method: 'POST', body: JSON.stringify(opt.body)
+        } : {}));
+        let j = {};
+        try {
+            j = await r.json();
+        }
+        catch (e) { }
+        if (r.status === 401 && opt.auth) {
+            logout(true);
+            throw new Error('401');
+        }
+        if (!r.ok || j.ok === false)
+            throw new Error(j.error || ('http ' + r.status));
+        return j;
+    };
+    function logout(expired) {
+        token = '';
+        try {
+            localStorage.removeItem('vaigai-token');
+        }
+        catch (e) { }
+        data = null;
+        $('#dash').classList.add('hide');
+        $('#login').classList.remove('hide');
+        $('#f-phone').classList.remove('hide');
+        $('#f-otp').classList.add('hide');
+        $('#out').classList.add('hide');
+        st(expired ? t('exp') : '', expired ? 'err' : '');
+    }
+    function draw() {
+        const c = data.customer || {};
+        $('#hello').textContent = t('hello') + (c.name ? ', ' + c.name : '');
+        $('#who').textContent = c.phone || '';
+        $('#subs').innerHTML = (data.subscriptions.length ? data.subscriptions.map(s => {
+            const paused = String(s.status).toLowerCase() === 'paused';
+            return '<div class="card" data-sub="' + esc(s.sub_id) + '"><div class="row"><b>' + esc(s.items.replace(/VGM-[A-Z]+-\w+:/g, 'x ').replace(/;/g, ', ')) + '</b> <span class="tag' + (paused ? ' warn' : '') + '">' + esc(s.status) + '</span></div><div class="muted">' + esc(s.frequency) + ' · ' + esc(s.slot || '') + (s.skip_dates ? '<br>' + t('skips') + ': ' + esc(s.skip_dates) : '') + '</div><div class="row" style="margin-top:10px">' + (paused ? '<button class="btn sm" data-a="resume">' + t('resume') + '</button>' : '<button class="btn sm" data-a="pause">' + t('pause') + '</button><button class="btn sm" data-a="skipT">' + t('skipT') + '</button><input type="date" aria-label="' + t('skipD') + '" style="width:auto;min-height:44px" data-d><button class="btn sm" data-a="skipD">' + t('skipD') + '</button>') + '<button class="btn sm" data-a="cancel">' + t('cancelP') + '</button></div></div>';
+        }).join('') : '<p class="muted">' + t('nosub') + '</p>');
+        $('#orders').innerHTML = data.orders.length ? data.orders.map(o => '<div class="card" data-o="' + esc(o.order_id) + '"><div class="row"><b>' + esc(o.order_id) + '</b> <span class="tag">' + esc(o.status) + '</span> <span class="muted">' + esc(String(o.created_at).slice(0, 10)) + '</span></div><div>' + esc(o.items) + '</div><div class="row" style="justify-content:space-between"><b>₹' + esc(o.total) + '</b><button class="btn sm" data-r="' + esc(o.order_id) + '">' + t('rep') + '</button></div></div>').join('') : '<p class="muted">' + t('none') + '</p>';
+    }
+    async function load() {
+        try {
+            const j = await call('/vaigai-account', { auth: true });
+            data = j.customer ? j : (j.response || null);
+        }
+        catch (e) {
+            if (String(e.message) !== '401')
+                st(t('fail'), 'err');
+            return;
+        }
+        if (!data)
+            return;
+        $('#login').classList.add('hide');
+        $('#dash').classList.remove('hide');
+        $('#out').classList.remove('hide');
+        st('');
+        draw();
+    }
+    async function sub(id, action, date) {
+        try {
+            await call('/vaigai-sub-update', {
+                auth: true, body: {
+                    sub_id: id, action, date
+                }
+            });
+            await load();
+            st('✓', 'ok');
+        }
+        catch (e) {
+            if (String(e.message) !== '401')
+                st(e.message.replace(/^http \d+$/, t('fail')), 'err');
+        }
+    }
+    $('#lang').onclick = () => {
+        L = L === 'ta' ? 'en' : 'ta';
+        try {
+            localStorage.setItem('vaigai-lang', L);
+        }
+        catch (e) { }
+        labels();
+    };
+    $('#out').onclick = () => logout(false);
+    $('#f-phone').onsubmit = async (e) => {
+        e.preventDefault();
+        const p = norm($('#ph').value);
+        if (!p) {
+            st(t('bad'), 'err');
+            return;
+        }
+        phone = p;
+        try {
+            await call('/vaigai-otp-request', {
+                key: true, body: { phone: p }
+            });
+            $('#f-phone').classList.add('hide');
+            $('#f-otp').classList.remove('hide');
+            $('#otp').focus();
+            st(t('sent'), 'ok');
+        }
+        catch (e2) {
+            st(e2.message.replace(/^http \d+$/, t('fail')), 'err');
+        }
+    };
+    $('#b-back').onclick = () => {
+        $('#f-otp').classList.add('hide');
+        $('#f-phone').classList.remove('hide');
+        st('');
+    };
+    $('#f-otp').onsubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const j = await call('/vaigai-otp-verify', {
+                key: true, body: {
+                    phone, otp: $('#otp').value.trim()
+                }
+            });
+            token = j.token;
+            try {
+                localStorage.setItem('vaigai-token', token);
+                localStorage.setItem('vaigai-phone', phone);
+            }
+            catch (e3) { }
+            $('#otp').value = '';
+            await load();
+        }
+        catch (e2) {
+            st(e2.message.replace(/^http \d+$/, t('fail')), 'err');
+        }
+    };
+    $('#subs').onclick = e => {
+        const b = e.target.closest('button[data-a]');
+        if (!b)
+            return;
+        const card = b.closest('[data-sub]'), id = card.dataset.sub, a = b.dataset.a;
+        if (a === 'skipT') {
+            const d = new Date(Date.now() + 330 * 60000 + 86400000 * (new Date(Date.now() + 330 * 60000).getUTCHours() >= 21 ? 2 : 1));
+            return sub(id, 'skip', d.toISOString().slice(0, 10));
+        }
+        if (a === 'skipD') {
+            const v = card.querySelector('[data-d]').value;
+            if (!v) {
+                st(t('skipD'), 'err');
+                return;
+            }
+            return sub(id, 'skip', v);
+        }
+        if (a === 'cancel' && !confirm(t('cancelP') + '?'))
+            return;
+        sub(id, a);
+    };
+    $('#orders').onclick = e => {
+        const b = e.target.closest('button[data-r]');
+        if (!b)
+            return;
+        repOrder = data.orders.find(o => o.order_id === b.dataset.r);
+        $('#rep-i').textContent = repOrder.items + ' · ₹' + repOrder.total;
+        $('#rep').classList.remove('hide');
+        $('#rep-go').focus();
+    };
+    $('#rep-x').onclick = () => $('#rep').classList.add('hide');
+    $('#rep-go').onclick = async () => {
+        if (!repOrder || !ORDER)
+            return st(t('fail'), 'err');
+        let items = [];
+        try {
+            items = JSON.parse(repOrder.items_json || '[]');
+        }
+        catch (e) { }
+        try {
+            const r = await fetch(ORDER, {
+                method: 'POST', headers: {
+                    'Content-Type': 'application/json', 'x-vaigai-key': KEY
+                }, body: JSON.stringify({
+                    items: items.map(i => ({
+                        sku: i.sku, qty: i.qty
+                    })), customer: {
+                        name: (data.customer || {}).name || 'Customer', phone
+                    }, address: repOrder.address, area: repOrder.area, pincode: repOrder.pincode, slot: $('#slot').value, payment: 'cod', lang: L, source: {
+                        page: '/account', utm: {}
+                    }
+                })
+            });
+            const j = await r.json();
+            if (!r.ok || j.ok === false)
+                throw new Error('x');
+            $('#rep').classList.add('hide');
+            await load();
+            st(t('done') + ': ' + j.order_id, 'ok');
+        }
+        catch (e) {
+            st(t('fail'), 'err');
+        }
+    };
+    labels();
+    if (!API) {
+        st('Set accountApi in this page (see README).', 'err');
+    }
+    else if (token)
+        load();
+})();
+</script></body></html>

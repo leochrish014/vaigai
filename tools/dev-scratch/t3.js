@@ -1,0 +1,6 @@
+const {chromium}=require('/home/claude/.npm-global/lib/node_modules/playwright');
+(async()=>{const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium-1194/chrome-linux/chrome',args:['--no-sandbox']});
+const ctx=await b.newContext({viewport:{width:844,height:390}});await ctx.addInitScript("(()=>{const n=new Proxy(function(){},{get:(t,k)=>k==='then'?undefined:n,apply:()=>n});window.gsap=n;window.ScrollTrigger=n})()");
+const p=await ctx.newPage();await p.goto('file:///mnt/user-data/outputs/vaigai-site/index.html');await p.addStyleTag({content:'#pre{display:none!important}.view>.sc:nth-child(n+2){display:none}.caps>.cap:nth-child(n+2){display:none}'});await p.waitForTimeout(600);
+const r=await p.evaluate(()=>{const sec=document.querySelector('#story');sec.scrollIntoView();const st=sec.querySelector('.stage').getBoundingClientRect(),v=sec.querySelector('.view').getBoundingClientRect(),c=sec.querySelector('.caps').getBoundingClientRect(),pn=sec.querySelector('.pin').getBoundingClientRect();return {st:[st.top,st.bottom,st.width],view:[v.width,v.height],caps:[c.width,c.height],pin:[pn.top,pn.bottom],cols:getComputedStyle(sec.querySelector('.stage')).gridTemplateColumns}});
+console.log(JSON.stringify(r));await p.screenshot({path:'/home/claude/shots/land_story.png'});await b.close()})();

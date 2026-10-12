@@ -1,0 +1,2275 @@
+{
+  "name": "Vaigai 07 · Customer account (OTP login, repeat, pause, skip)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-otp-request",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "73e50c26-9944-4d7b-a172-f67be1a62ffd",
+      "name": "OTP Request Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        200
+      ],
+      "webhookId": "13bb7128-3389-4e47-8172-b936349a23d0"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65dfdcb1-1d65-4b79-a338-d924d6c6ba19",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "7280f472-a9e3-4871-b590-d1f91300dcac",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "80f45a78-bf81-4219-821d-7e21f8ba29d5",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "70163c45-183f-4e54-8440-0622266d3029",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "04272bc8-b451-4c71-82f0-5e136e5d40cd",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "9f434709-b8b0-4f65-8bfe-357cab98baf4",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "05a608fe-311d-4257-bdef-50dfb741f595",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "d1a1ee10-e3b6-4901-b685-e2d663dc1a3c",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "a2504d15-214b-4a2e-bedf-9b8df92f6ad2",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "4826cbc9-3c6a-4a34-a3f9-53c43cfe49e9",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "7482f391-cb3f-482f-b3d4-e2655a590e77",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "201a8169-b92a-4bd3-a75b-eb285543f28f",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "91e3fc24-18af-4c0a-90e8-e321ce79e79d",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "f04023c9-9430-4abf-ad88-fb489e5d4097",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "981c2442-64ba-48f7-ad46-f12669f70095",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "f9795680-01de-4185-b7ed-ec90c2d724b9",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "5d953a05-dcb8-44ab-89b8-2a759f1e5dfd",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "821bd42f-b0e7-40b8-9ed2-331508d17922",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a8cca133-0949-422a-81c8-da974809c5e4",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "b67bf230-2317-4aa1-8d4d-750c30e78b1b",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e19828f6-8320-490c-8326-c073fd303f17",
+      "name": "Key OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "d90203bd-9a17-43b2-82dc-f8e1109b6968",
+      "name": "Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "OTP"
+        },
+        "options": {}
+      },
+      "id": "dfb27a21-f2d0-456e-925e-eb4812286038",
+      "name": "Read OTP",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const safeEq=(a,b)=>{a=String(a);b=String(b);if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};\nconst normPh=s=>{const d=String(s||'').replace(/\\D/g,'');const t=d.slice(-10);return /^[6-9]\\d{9}$/.test(t)?t:''};\nconst b=$('OTP Request Webhook').first().json.body||{};const ph=normPh(b.phone);\nif(!ph)return [{json:{ok:false,response:{ok:false,error:'valid 10 digit mobile required'}}}];\nconst now=Date.now();const recent=$input.all().map(i=>i.json).filter(r=>r&&String(r.phone)===ph&&Date.parse(r.created_at)>now-600000);\nif(recent.length>=3)return [{json:{ok:false,response:{ok:false,error:'too many requests, please try after 10 minutes'}}}];\nreturn [{json:{ok:true,phone:ph}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "e5af697a-8541-4bf0-87c2-be265459aa2e",
+      "name": "Check OTP rate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "1a7b7ae4-0bea-4344-90b9-1999368a66f7",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e09af56c-a662-4d47-9d0b-a5058b875e7d",
+      "name": "Allowed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 429
+        }
+      },
+      "id": "8063c30f-ac1f-4fa7-9774-280d27a91119",
+      "name": "Respond Too Many",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "action": "generate",
+        "dataPropertyName": "rnd",
+        "encodingType": "hex",
+        "stringLength": 16
+      },
+      "id": "d7d02738-48fe-466f-b357-27a6cdb1a39b",
+      "name": "Random",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rnd=String($json.rnd||'');const otp=String(parseInt(rnd.slice(0,8),16)%1000000).padStart(6,'0');const phone=$('Check OTP rate').first().json.phone;\nreturn [{json:{phone,otp,otp_id:'OT'+rnd.slice(8,16),hmac_value:otp+'|'+phone}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "6f90283a-65e2-436d-a31c-dfd6c4e2abe4",
+      "name": "Derive OTP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "dataPropertyName": "expected",
+        "secret": "={{ $('Config').first().json.api_key }}",
+        "encoding": "hex",
+        "value": "={{ $json.hmac_value }}"
+      },
+      "id": "24fb0cd2-b0ef-405a-bacc-02fda9670450",
+      "name": "Hash OTP",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d=$('Derive OTP').first().json,now=Date.now();\nreturn [{json:{ok:true,otp:d.otp,phone:d.phone,row:{otp_id:d.otp_id,phone:d.phone,otp_hash:$json.expected,created_at:new Date(now).toISOString(),expires_at:new Date(now+300000).toISOString(),attempts:0,used:'no'},response:{ok:true,expires_in:300}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "e43b9ab6-a59b-472a-9704-d15c36781e79",
+      "name": "Build OTP row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "OTP"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "otp_id": "={{ $json.row.otp_id }}",
+            "phone": "={{ $json.row.phone }}",
+            "otp_hash": "={{ $json.row.otp_hash }}",
+            "created_at": "={{ $json.row.created_at }}",
+            "expires_at": "={{ $json.row.expires_at }}",
+            "attempts": "={{ $json.row.attempts }}",
+            "used": "={{ $json.row.used }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "e3676a6c-9f2a-4830-9cfc-95a6a9f96c8a",
+      "name": "Save OTP",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2200,
+        140
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Build OTP row').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "29ae8e40-7327-48d1-ac0e-62f8dca910fd",
+      "name": "Respond OTP Sent",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2420,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "ed5b29c7-95b6-469b-8235-0873dcbb92d1",
+              "leftValue": "={{ $('Config').first().json.wa_token }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "rightValue": "PASTE_WHATSAPP_ACCESS_TOKEN"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "06de9818-d24a-490d-b7b7-45250e023891",
+      "name": "WhatsApp configured?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $('Config').first().json.wa_phone_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.wa_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({messaging_product:'whatsapp',to:'91'+$('Build OTP row').first().json.phone,type:'template',template:{name:'login_otp',language:{code:'en'},components:[{type:'body',parameters:[{type:'text',text:$('Build OTP row').first().json.otp}]},{type:'button',sub_type:'url',index:'0',parameters:[{type:'text',text:$('Build OTP row').first().json.otp}]}]} }) }}",
+        "options": {}
+      },
+      "id": "009ec49f-fede-4d63-a290-9ac8e6fa7344",
+      "name": "WhatsApp: login code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        240
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-otp-verify",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "eb84633f-11ea-47a1-823c-af80d1b8a039",
+      "name": "OTP Verify Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        700
+      ],
+      "webhookId": "d324f902-6a95-46c9-8b30-adabb9a127fd"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b5f4e9e-c603-4c92-af50-2fd4cbb01aa2",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "74ed7065-75a9-4584-b01e-33945db321ea",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "0e56d03b-d5b2-4b34-bd8f-6614603be5e5",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "0c29f638-c6e8-4a6e-8d4b-207c9e038315",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "b06e3d4b-bbb9-4443-a754-fcb71cb08bfc",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "9e8083ef-1e4c-41a1-8ebf-241ea043b6ec",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "fba6c354-aae6-4fe2-88dc-da264a3a5f7a",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "e3c7634f-7bab-4ed7-8ece-6f8f4b0dfcf6",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "9de35508-8f3b-4bd9-9bb5-dd5ff3f1a5fe",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "f099265a-9773-462f-9cc4-b60f956cd4b4",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "cf4b88d0-a695-447f-a8a2-212bb3e88e09",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "bca257d7-a718-4c53-97c4-431d1c270dff",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "aa70de38-eef9-407b-a051-9a6a223da5e0",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "6721fefe-eba4-43dd-9d8a-dd9c3e22affb",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "da15c2e9-b399-4efd-8e66-9bf356bc1fce",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "d77d67b9-1467-4e7f-87ea-d8ee76f539b1",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "bc80cbcd-80fc-48a0-ba5d-64c440120441",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "da6d334c-8608-4a93-8a4a-c193e32a484d",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "f541a12c-04bc-4ff3-b4dc-a71278f4c477",
+      "name": "Config (verify)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "99e53927-2e1a-4e9d-9baa-08be66a4cc03",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f3ca031f-9c82-41d2-aa18-b9615bdf5660",
+      "name": "Key OK? (verify)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "265da22a-798a-41a9-8398-514a216a216b",
+      "name": "Unauthorized (verify)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "dataPropertyName": "expected",
+        "secret": "={{ $('Config (verify)').first().json.api_key }}",
+        "encoding": "hex",
+        "value": "={{ $json.body.otp + '|' + String($json.body.phone).replace(/\\D/g,'').slice(-10) }}"
+      },
+      "id": "c633da8d-1599-47e5-8bd4-e9099e4be11a",
+      "name": "Hash submitted OTP",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        660,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (verify)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "OTP"
+        },
+        "options": {}
+      },
+      "id": "39f3cc18-785b-4c82-ba64-10d65edf38d7",
+      "name": "Read OTP (verify)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        700
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const safeEq=(a,b)=>{a=String(a);b=String(b);if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};\nconst normPh=s=>{const d=String(s||'').replace(/\\D/g,'');const t=d.slice(-10);return /^[6-9]\\d{9}$/.test(t)?t:''};\nconst b=$('OTP Verify Webhook').first().json.body||{};const ph=normPh(b.phone),hash=$('Hash submitted OTP').first().json.expected;\nif(!ph||!/^\\d{6}$/.test(String(b.otp||'')))return [{json:{ok:false,response:{ok:false,error:'enter the 6 digit code'}}}];\nconst rows=$input.all().map(i=>i.json).filter(r=>r&&String(r.phone)===ph&&String(r.used).toLowerCase()!=='yes').sort((a,c)=>Date.parse(c.created_at)-Date.parse(a.created_at));const r=rows[0];\nif(!r||Date.parse(r.expires_at)<Date.now())return [{json:{ok:false,response:{ok:false,error:'code expired, please request a new one'}}}];\nconst at=+r.attempts||0;if(at>=5)return [{json:{ok:false,response:{ok:false,error:'too many wrong attempts, please request a new code'}}}];\nif(!safeEq(String(r.otp_hash),String(hash)))return [{json:{ok:false,upd:{otp_id:r.otp_id,attempts:at+1,used:'no'},response:{ok:false,error:'wrong code'}}}];\nreturn [{json:{ok:true,phone:ph,upd:{otp_id:r.otp_id,attempts:at,used:'yes'}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "b562153f-8322-43f4-a25e-f6f7483d1c29",
+      "name": "Verify OTP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "5559780c-612c-43d6-93b5-2793893d69a5",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "214b39bd-9ba8-4fd2-82a0-e1f7e358b802",
+      "name": "Code correct?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "action": "generate",
+        "dataPropertyName": "token",
+        "encodingType": "hex",
+        "stringLength": 24
+      },
+      "id": "9c85314d-5d84-419a-bd00-6dacb1d6d96f",
+      "name": "Session token",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ph=$('Verify OTP').first().json.phone,now=Date.now();\nreturn [{json:{row:{token:$json.token,phone:ph,created_at:new Date(now).toISOString(),expires_at:new Date(now+30*86400000).toISOString()},response:{ok:true,token:$json.token}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "af3755bc-4adf-42cc-a376-ce040c6f5ac2",
+      "name": "Build session row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (verify)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Sessions"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "token": "={{ $json.row.token }}",
+            "phone": "={{ $json.row.phone }}",
+            "created_at": "={{ $json.row.created_at }}",
+            "expires_at": "={{ $json.row.expires_at }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "ece00af8-364d-46d4-91fe-77fff54155bf",
+      "name": "Save session",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1980,
+        620
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (verify)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "OTP"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "otp_id": "={{ $('Verify OTP').first().json.upd.otp_id }}",
+            "attempts": "={{ $('Verify OTP').first().json.upd.attempts }}",
+            "used": "={{ $('Verify OTP').first().json.upd.used }}"
+          },
+          "matchingColumns": [
+            "otp_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "a64f2380-7183-4e60-97f8-2326bd58d663",
+      "name": "Mark OTP used",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2200,
+        620
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Build session row').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "be6fa83b-18d6-4502-b4e8-f42b47c7c9bc",
+      "name": "Respond Logged In",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2420,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "a68b7e7e-170b-4c7f-95f0-9b735ae4520d",
+              "leftValue": "={{ $json.upd ? true : false }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "882aa300-60b4-419d-8551-4eed5ac7fc36",
+      "name": "Wrong code?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (verify)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "OTP"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "otp_id": "={{ $('Verify OTP').first().json.upd.otp_id }}",
+            "attempts": "={{ $('Verify OTP').first().json.upd.attempts }}",
+            "used": "={{ $('Verify OTP').first().json.upd.used }}"
+          },
+          "matchingColumns": [
+            "otp_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "61691b5c-af43-4727-bf20-9d5b4c180f2a",
+      "name": "Count wrong attempt",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1760,
+        760
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Verify OTP').first().json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "cfb3be81-6538-4cec-ad9f-55fd915d2e75",
+      "name": "Respond Code Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "vaigai-account",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "262e143f-ed18-40d8-84ac-3455aff18783",
+      "name": "Account Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1200
+      ],
+      "webhookId": "b21fead5-c6b0-4570-a772-4bfb0d31ca7d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7fd431e8-1af9-439e-9210-126b042e8c58",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "fd59d213-bb97-400d-970d-b4f471236163",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "0c1be172-42ff-4072-8859-4b6e39d86867",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "3a91c0fd-71a6-4789-8c12-c373b2813260",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "5553a452-511b-43a9-91de-fd8eccfaba1c",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "fca3dca9-a6eb-4350-a0bc-f8843aeef05f",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "f43b2d91-c605-431a-9602-6ad533d387be",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "66c941be-b940-4385-8ba5-bd70a14f918f",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "1c9ad243-7c12-4f50-87c0-7e5749b63d90",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "ae5f9a9f-7a4c-44f8-b4af-a95486e7aae2",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "12b42fd0-2c5a-4dcb-8499-bafe2bf69698",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "fa7cad6f-23fd-427f-b6c9-066d899d0ecf",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "81027987-8691-49d3-97d1-5a897cb25213",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "56fbd350-7b0e-45b5-8c48-9f79c044bfcd",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "fe633c21-5b88-4d92-b00d-f436cfdaf231",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "2d53008b-64be-4dd0-9d52-790ae308dcb7",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "1715b5a8-ee7f-462a-b28e-b9f0c7c7e9bf",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "b30c36fd-700d-4e4e-95b1-b3884fd7cbb0",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "9c82d194-06a5-431d-a3e4-6261da7858ee",
+      "name": "Config (account)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (account)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Sessions"
+        },
+        "options": {}
+      },
+      "id": "e47704eb-2d42-4e23-92f3-b333e3bdc298",
+      "name": "Read Sessions",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        1200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const safeEq=(a,b)=>{a=String(a);b=String(b);if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};\nconst normPh=s=>{const d=String(s||'').replace(/\\D/g,'');const t=d.slice(-10);return /^[6-9]\\d{9}$/.test(t)?t:''};\nconst w=$('Account Webhook').first().json;const tok=String((w.headers||{})['x-vaigai-token']||'');\nconst s=tok.length>=16?$input.all().map(i=>i.json).find(r=>r&&r.token&&safeEq(r.token,tok)&&Date.parse(r.expires_at)>Date.now()):null;\nif(!s)return [{json:{ok:false,response:{ok:false,error:'session expired, please log in again'}}}];\nreturn [{json:{ok:true,phone:String(s.phone)}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "26ef9bde-cd19-4288-bfa1-12ba46bc4278",
+      "name": "Check session (account)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "dab34c63-ece3-4efe-866d-ef830197deef",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "15313d1b-81f1-406e-b52b-127f512102f4",
+      "name": "Session valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "bcc83418-59d9-4a23-bae7-f848d9470aad",
+      "name": "Respond Session Expired",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        1380
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (account)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "c444ea89-e507-4af0-ae88-1b2a4bc557bf",
+      "name": "Read Orders (account)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1100,
+        1140
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (account)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Subscriptions"
+        },
+        "options": {}
+      },
+      "id": "958119b0-05aa-451f-9214-a58176ea4432",
+      "name": "Read Subscriptions (account)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1320,
+        1140
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const me=$('Check session (account)').first().json.phone;\nconst orders=$('Read Orders (account)').all().map(i=>i.json).filter(r=>r&&String(r.phone)===me).sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)).slice(0,15);\nconst subs=$input.all().map(i=>i.json).filter(r=>r&&String(r.phone)===me&&String(r.status||'').toLowerCase()!=='cancelled');\nconst name=(orders[0]&&orders[0].customer_name)||(subs[0]&&subs[0].customer_name)||'';\nreturn [{json:{response:{ok:true,customer:{name:String(name),phone:me.slice(0,2)+'XXXXXX'+me.slice(-2)},orders:orders.map(o=>({order_id:o.order_id,created_at:o.created_at,status:o.status,items:o.items,total:+o.total,payment:o.payment,delivery_date:o.delivery_date,invoice_no:o.invoice_no||'',items_json:o.items_json,address:o.address,area:o.area,pincode:o.pincode,slot:o.slot})),subscriptions:subs.map(s=>({sub_id:s.sub_id,status:s.status,items:s.items,frequency:s.frequency,slot:s.slot,skip_dates:s.skip_dates||'',address:s.address}))}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "247a0b8b-bc5c-4dd1-a42f-fa8d67f96494",
+      "name": "Build account",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "c207cf40-b71d-4e17-99f8-3a06eb24973d",
+      "name": "Respond Account",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-sub-update",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "de14df5d-d3bf-4ae4-8ff7-40e07a6f2e2b",
+      "name": "Sub Update Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1700
+      ],
+      "webhookId": "47db3e72-cb4a-4a0f-ad0c-bb75b39080d7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aaa105d7-6cfa-4b3c-b412-f5bf8302e8ff",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "6b4ff870-b75b-460e-8a99-4fb62071ece5",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "5c8741db-7578-458a-a9b9-c51502e47ad4",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "41283b1b-792a-4e7a-832c-fb335fa67850",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "63bd7e95-7219-44d6-a9ed-f59e29fa2d5a",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "8e4dd46b-93d0-4009-a5d1-2d0bc0eee772",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "25c4c924-339e-45dc-9f0d-af48f3d9715a",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "db45987f-d638-4ef5-a44f-c35815c3b074",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "cf66ae54-d5ca-4f9d-8ec8-b6f7aa694f34",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "d96793b9-e325-4fcd-8855-db0167658b74",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "2ce849c5-f226-436a-a104-6acb8bf6bff4",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "9c373bf8-551f-42da-a5ee-b6873d50ba4e",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "e235f0e6-374a-4928-864d-cbb5e2d164a6",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "b58fcb4c-1a4b-4caa-bc1c-22fef2ff3847",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "ea004b4b-4dff-458c-9a9b-321cf59fc1e8",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "0d1d059d-27b5-48a5-a25f-435cec915ac2",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "afb50468-f009-42d6-87f2-23aa12943b41",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "7eb86e2f-e646-46d0-aebb-31e525ebee71",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5e4592f4-4fcb-4a01-9f4c-508d581165f2",
+      "name": "Config (sub)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (sub)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Sessions"
+        },
+        "options": {}
+      },
+      "id": "a2b4d0b7-08bc-4bb2-9428-b6fc6be19dd5",
+      "name": "Read Sessions (sub)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        1700
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const safeEq=(a,b)=>{a=String(a);b=String(b);if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};\nconst normPh=s=>{const d=String(s||'').replace(/\\D/g,'');const t=d.slice(-10);return /^[6-9]\\d{9}$/.test(t)?t:''};\nconst w=$('Sub Update Webhook').first().json;const tok=String((w.headers||{})['x-vaigai-token']||'');\nconst s=tok.length>=16?$input.all().map(i=>i.json).find(r=>r&&r.token&&safeEq(r.token,tok)&&Date.parse(r.expires_at)>Date.now()):null;\nif(!s)return [{json:{ok:false,response:{ok:false,error:'session expired, please log in again'}}}];\nreturn [{json:{ok:true,phone:String(s.phone)}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "2414d649-41da-4c8a-ae3e-183eddeac008",
+      "name": "Check session (sub)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "fc651151-c987-49a1-a95f-f08efbe09d1b",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5a80bfa0-ac51-4749-9b40-2a2891bf6585",
+      "name": "Session valid? (sub)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "ef59cf6e-9022-4169-a85c-03d6785cf400",
+      "name": "Respond Session Expired (sub)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        1880
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (sub)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Subscriptions"
+        },
+        "options": {}
+      },
+      "id": "401427fd-581a-4c3b-8ec0-af07524edc2a",
+      "name": "Read Subscriptions (sub)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1100,
+        1640
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const IST=()=>new Date(Date.now()+330*60000);const ymd=d=>d.toISOString().slice(0,10);const add=(d,n)=>{const x=new Date(d);x.setUTCDate(x.getUTCDate()+n);return x};\nconst me=$('Check session (sub)').first().json.phone,b=$('Sub Update Webhook').first().json.body||{};\nconst s=$input.all().map(i=>i.json).find(r=>r&&String(r.sub_id)===String(b.sub_id)&&String(r.phone)===me);\nconst bad=m=>[{json:{ok:false,response:{ok:false,error:m}}}];\nif(!s)return bad('subscription not found');\nconst st=String(s.status||'').toLowerCase();const act=String(b.action||'');\nif(st==='cancelled')return bad('subscription is cancelled');\nlet status=st,skips=String(s.skip_dates||'').split(',').map(x=>x.trim()).filter(Boolean);\nif(act==='pause')status='paused';else if(act==='resume')status='active';else if(act==='cancel')status='cancelled';\nelse if(act==='skip'){const d=String(b.date||'');if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(d)||isNaN(Date.parse(d)))return bad('choose a valid date');\n const now=IST(),first=ymd(add(now,now.getUTCHours()>=21?2:1)),last=ymd(add(now,60));if(d<first)return bad('too late to skip that day (cut-off 9 PM the day before)');if(d>last)return bad('you can skip up to 60 days ahead');\n if(skips.indexOf(d)<0)skips.push(d);skips.sort();}\nelse return bad('unknown action');\nreturn [{json:{ok:true,upd:{sub_id:s.sub_id,status,skip_dates:skips.join(',')},response:{ok:true,sub_id:s.sub_id,status,skip_dates:skips.join(',')}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "cf2c5f30-df7c-4f3c-b472-24060b34d728",
+      "name": "Apply change",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        1640
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "14e8e7e6-4aa9-48f0-a0fe-184bf6f09cf5",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2eccdd49-1435-49c0-8448-d2c9e5936004",
+      "name": "Change valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        1640
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (sub)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Subscriptions"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sub_id": "={{ $('Apply change').first().json.upd.sub_id }}",
+            "status": "={{ $('Apply change').first().json.upd.status }}",
+            "skip_dates": "={{ $('Apply change').first().json.upd.skip_dates }}"
+          },
+          "matchingColumns": [
+            "sub_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "c067e219-c3a1-4b41-b77f-cd2de29ffb7f",
+      "name": "Update Subscriptions",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1760,
+        1580
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Apply change').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "31ec4a24-3d41-47ea-a22f-6c0417a38305",
+      "name": "Respond Updated",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        1580
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "879683dd-e108-4cff-b467-7d1ead77313e",
+      "name": "Respond Change Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        1780
+      ]
+    },
+    {
+      "parameters": {
+        "content": "CUSTOMER ACCOUNT\nPasswordless login: customer enters mobile, gets a 6 digit code on WhatsApp (template login_otp), codes are stored hashed, expire in 5 minutes, max 3 requests per 10 minutes and 5 wrong tries. Session token lasts 30 days. Create tabs OTP and Sessions (see sheets/). Customers can see their last 15 orders, repeat an order, pause, resume, cancel or skip a delivery (cut-off 9 PM the day before). Subscriptions tab needs a phone column that matches the customer's mobile.\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 300,
+        "width": 760
+      },
+      "id": "562c1039-bbf9-4329-949b-ce7c1a898696",
+      "name": "Note 28be",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -120
+      ]
+    }
+  ],
+  "connections": {
+    "OTP Request Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Key OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK?": {
+      "main": [
+        [
+          {
+            "node": "Read OTP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read OTP": {
+      "main": [
+        [
+          {
+            "node": "Check OTP rate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check OTP rate": {
+      "main": [
+        [
+          {
+            "node": "Allowed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Allowed?": {
+      "main": [
+        [
+          {
+            "node": "Random",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Too Many",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Random": {
+      "main": [
+        [
+          {
+            "node": "Derive OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Derive OTP": {
+      "main": [
+        [
+          {
+            "node": "Hash OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash OTP": {
+      "main": [
+        [
+          {
+            "node": "Build OTP row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build OTP row": {
+      "main": [
+        [
+          {
+            "node": "Save OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save OTP": {
+      "main": [
+        [
+          {
+            "node": "Respond OTP Sent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp configured?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp configured?": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: login code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OTP Verify Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (verify)": {
+      "main": [
+        [
+          {
+            "node": "Key OK? (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK? (verify)": {
+      "main": [
+        [
+          {
+            "node": "Hash submitted OTP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash submitted OTP": {
+      "main": [
+        [
+          {
+            "node": "Read OTP (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read OTP (verify)": {
+      "main": [
+        [
+          {
+            "node": "Verify OTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify OTP": {
+      "main": [
+        [
+          {
+            "node": "Code correct?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code correct?": {
+      "main": [
+        [
+          {
+            "node": "Session token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wrong code?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session token": {
+      "main": [
+        [
+          {
+            "node": "Build session row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build session row": {
+      "main": [
+        [
+          {
+            "node": "Save session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save session": {
+      "main": [
+        [
+          {
+            "node": "Mark OTP used",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark OTP used": {
+      "main": [
+        [
+          {
+            "node": "Respond Logged In",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrong code?": {
+      "main": [
+        [
+          {
+            "node": "Count wrong attempt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Code Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Count wrong attempt": {
+      "main": [
+        [
+          {
+            "node": "Respond Code Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Account Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (account)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (account)": {
+      "main": [
+        [
+          {
+            "node": "Read Sessions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sessions": {
+      "main": [
+        [
+          {
+            "node": "Check session (account)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check session (account)": {
+      "main": [
+        [
+          {
+            "node": "Session valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session valid?": {
+      "main": [
+        [
+          {
+            "node": "Read Orders (account)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Session Expired",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders (account)": {
+      "main": [
+        [
+          {
+            "node": "Read Subscriptions (account)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Subscriptions (account)": {
+      "main": [
+        [
+          {
+            "node": "Build account",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build account": {
+      "main": [
+        [
+          {
+            "node": "Respond Account",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sub Update Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (sub)": {
+      "main": [
+        [
+          {
+            "node": "Read Sessions (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sessions (sub)": {
+      "main": [
+        [
+          {
+            "node": "Check session (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check session (sub)": {
+      "main": [
+        [
+          {
+            "node": "Session valid? (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session valid? (sub)": {
+      "main": [
+        [
+          {
+            "node": "Read Subscriptions (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Session Expired (sub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Subscriptions (sub)": {
+      "main": [
+        [
+          {
+            "node": "Apply change",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply change": {
+      "main": [
+        [
+          {
+            "node": "Change valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Change valid?": {
+      "main": [
+        [
+          {
+            "node": "Update Subscriptions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Change Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Subscriptions": {
+      "main": [
+        [
+          {
+            "node": "Respond Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

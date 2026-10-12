@@ -1,0 +1,14 @@
+const E=require('./invoice-engine.js');let p=0,f=0;const T=(n,c,i)=>{if(c)p++;else{f++;console.log('FAIL',n,i||'')}};
+let r=E.compute([{sku:'VGM-CARTON-500ml',name:'Milk',qty:2,unit_price:32}]);T('milk nil rated: no tax',r.tax_total===0&&r.total===64&&r.taxable_total===64);
+r=E.compute([{sku:'VGM-GHEE-500ml',name:'Ghee',qty:1,unit_price:320}]);T('ghee 5%: taxable 304.76, tax 15.24, CGST 7.62 SGST 7.62',r.taxable_total===304.76&&r.tax_total===15.24&&r.cgst===7.62&&r.sgst===7.62&&r.total===320,JSON.stringify(r));
+r=E.compute([{sku:'VGM-CURD-400g',name:'Curd',qty:3,unit_price:60},{sku:'VGM-BUTTER-200g',name:'Butter',qty:1,unit_price:110},{sku:'VGM-CARTON-500ml',name:'Milk',qty:2,unit_price:32}]);T('mixed basket totals reconcile (taxable + tax = gross)',Math.abs(r.taxable_total+r.tax_total-r.gross_total)<0.011&&r.total===354,JSON.stringify([r.taxable_total,r.tax_total,r.gross_total,r.total]));
+r=E.compute([{sku:'VGM-GHEE-500ml',name:'Ghee',qty:1,unit_price:320}],{state_code:'29'});T('inter-state: IGST only',r.igst===15.24&&r.cgst===0&&r.sgst===0&&!r.intra_state);
+r=E.compute([{sku:'VGM-GHEE-500ml',name:'Ghee',qty:2,unit_price:320}],{discount:64});T('discount reduces taxable value proportionally',r.gross_total===576&&Math.abs(r.taxable_total+r.tax_total-576)<0.011);
+r=E.compute([{sku:'VGM-CARTON-500ml',name:'x',qty:0,unit_price:32}]);T('zero qty lines dropped',r.lines.length===0&&r.total===0);
+r=E.compute([{sku:'VGM-GHEE-500ml',name:'Ghee',qty:1,unit_price:99.5}]);T('round-off to whole rupee recorded',r.total===100&&r.round_off===0.5,JSON.stringify([r.total,r.round_off]));
+r=E.compute([{sku:'UNKNOWN',name:'Thing',qty:1,unit_price:10}]);T('unknown SKU treated as nil rated, not crash',r.lines.length===1&&r.tax_total===0);
+T('financial year: Jan 2025 -> 24-25, Apr 2025 -> 25-26',E.fy(new Date('2025-01-10T00:00:00Z'))==='24-25'&&E.fy(new Date('2025-04-01T00:00:00Z'))==='25-26'&&E.fy(new Date('2025-03-31T00:00:00Z'))==='24-25');
+T('invoice number format and sequence',E.invoiceNo(7,new Date('2025-06-01T00:00:00Z'))==='VGM/25-26/000007'&&E.nextSeq(['VGM/25-26/000007','VGM/24-25/000099','x'],new Date('2025-06-01T00:00:00Z'))===8&&E.nextSeq([],new Date('2025-06-01T00:00:00Z'))===1);
+T('constant-time compare',E.safeEqual('abc','abc')&&!E.safeEqual('abc','abd')&&!E.safeEqual('abc','abcd'));
+const crypto=require('crypto');const sig=crypto.createHmac('sha256','topsecret').update('order_1|pay_1').digest('hex');T('razorpay signature recipe (order_id|payment_id, HMAC SHA256 hex) is verifiable',E.safeEqual(sig,crypto.createHmac('sha256','topsecret').update('order_1|pay_1').digest('hex'))&&!E.safeEqual(sig,crypto.createHmac('sha256','topsecret').update('order_1|pay_2').digest('hex')));
+console.log('invoice engine tests:',p,'passed,',f,'failed');process.exit(f?1:0);

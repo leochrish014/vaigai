@@ -1,0 +1,2 @@
+sub_id,status,customer_name,phone,address,area,pincode,items,frequency,slot,skip_dates,start_date,end_date,language
+S001,active,Sample Customer,9876543210,"12 Main Street, Anna Nagar",Anna Nagar,625020,VGM-CARTON-500ml:2;VGM-CURD-400g:1,daily,By 5:30 AM,,2025-01-01,,en

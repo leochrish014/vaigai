@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Vaigai Milk admin</title>
+<script>
+window.VAIGAI_CONFIG = { adminApi: "" }; /* https://YOUR-N8N-HOST/webhook */
+</script>
+<style>
+:root{--bg:#eef3ef;--card:#fff;--ink:#0a2a24;--muted:#4a645c;--line:#d5e0d0;--acc:#0b7a3e;--gold:#e3b341;--bad:#b3261e;--warn:#7a4f00;color-scheme:light}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+header{background:#06303a;color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:5}header b{font-size:1.1rem}nav{display:flex;gap:6px;flex-wrap:wrap;flex:1}nav button{min-height:44px;padding:0 16px;border-radius:99px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font-weight:600;cursor:pointer}nav button[aria-selected=true]{background:var(--gold);color:#0a2a24;border-color:var(--gold)}
+main{max-width:1200px;margin:0 auto;padding:16px}button,input,select{font:inherit;color:inherit}.btn{min-height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;padding:0 14px;font-weight:600;cursor:pointer}.btn.pri{background:var(--acc);color:#fff;border-color:var(--acc)}input,select{min-height:44px;border-radius:10px;border:1px solid var(--line);padding:0 10px;background:#fff}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}.kpi b{display:block;font-size:1.8rem;line-height:1.1}.kpi.bad b{color:var(--bad)}.kpi.warn b{color:var(--warn)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}.tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:.9rem}th{background:#f1f6f2;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+.tag{display:inline-block;border-radius:99px;padding:1px 9px;font-size:.75rem;font-weight:700;background:#e4f1e8;color:var(--acc)}.tag.hi{background:#fde4e1;color:var(--bad)}.tag.wa{background:#fff1cf;color:var(--warn)}
+.area{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}.area h3{margin:0 0 6px}.stop{border-top:1px dashed var(--line);padding:8px 0}.hide{display:none!important}#err{color:var(--bad);font-weight:600;min-height:1.4em}
+#login{max-width:380px;margin:60px auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}#login input{width:100%;margin:8px 0 12px}
+@media print{header,.bar,.btn{display:none!important}body{background:#fff}.area{break-inside:avoid}}
+</style></head><body>
+<header><b>Vaigai Milk · Admin</b><nav role="tablist" id="nav" class="hide"></nav><button class="btn hide" id="out" type="button">Log out</button></header>
+<main><div id="err" role="alert"></div>
+<form id="login"><h1 style="margin-top:0;font-size:1.3rem">Admin login</h1><label for="key">Admin key</label><input id="key" type="password" autocomplete="current-password"><button class="btn pri" type="submit" style="width:100%">Log in</button></form>
+<div id="app" class="hide"></div></main>
+<script>
+(function () {
+    const $ = s => document.querySelector(s), C = window.VAIGAI_CONFIG || {}, q = new URLSearchParams(location.search), aq = q.get('api');
+    const API = (aq && /^http:\/\/localhost(:\d+)?\/webhook$/.test(aq)) ? aq : (C.adminApi || '');
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+    const SKU = {
+        'VGM-CARTON-500ml': 'Vaigai Fresh milk 500 ml', 'VGM-HERO-500ml': 'Glass bottle milk 500 ml', 'VGM-BADAM-250ml': 'Badam milk 250 ml', 'VGM-GHEE-500ml': 'Farm ghee 500 ml', 'VGM-CURD-400g': 'Set curd 400 g', 'VGM-BUTTER-200g': 'Fresh butter 200 g'
+    };
+    const ST = ['received', 'confirmed', 'out_for_delivery', 'delivered', 'cancelled', 'needs_review', 'failed'], LS = ['new', 'contacted', 'resolved', 'closed'];
+    const ist = (n = 0) => new Date(Date.now() + 330 * 60000 + n * 864e5).toISOString().slice(0, 10);
+    let key = '', tab = 'overview', D = {
+        orders: [], leads: [], stock: []
+    }, date = ist(1), filt = {
+        status: '', q: ''
+    };
+    try {
+        key = sessionStorage.getItem('vaigai-admin') || '';
+    }
+    catch (e) { }
+    const err = m => {
+        $('#err').textContent = m || '';
+    };
+    async function call(action, body) {
+        const r = await fetch(API + '/vaigai-admin', {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json', 'x-vaigai-admin': key
+            }, body: JSON.stringify(Object.assign({ action }, body || {}))
+        });
+        if (r.status === 401) {
+            logout('Session ended. Log in again.');
+            throw new Error('401');
+        }
+        const j = await r.json();
+        if (!r.ok || j.ok === false)
+            throw new Error(j.error || 'error');
+        return j;
+    }
+    function logout(m) {
+        key = '';
+        try {
+            sessionStorage.removeItem('vaigai-admin');
+        }
+        catch (e) { }
+        $('#app').classList.add('hide');
+        $('#nav').classList.add('hide');
+        $('#out').classList.add('hide');
+        $('#login').classList.remove('hide');
+        err(m || '');
+    }
+    async function loadAll() {
+        const [o, l, s] = await Promise.all([call('list_orders', {
+                date_from: ist(-1), date_to: ist(14)
+            }), call('list_leads'), call('list_stock')]);
+        D.orders = o.orders;
+        D.leads = l.leads;
+        D.stock = s.stock;
+    }
+    async function enter() {
+        await loadAll();
+        $('#login').classList.add('hide');
+        $('#app').classList.remove('hide');
+        $('#nav').classList.remove('hide');
+        $('#out').classList.remove('hide');
+        err('');
+        draw();
+    }
+    const TABS = [['overview', 'Overview'], ['orders', 'Orders'], ['routes', 'Routes'], ['stock', 'Stock'], ['leads', 'Leads']];
+    function draw() {
+        $('#nav').innerHTML = TABS.map(([k, l]) => '<button role="tab" data-t="' + k + '" aria-selected="' + (tab === k) + '">' + l + '</button>').join('');
+        $('#app').innerHTML = ({
+            overview, orders, routes, stock, leads
+        })[tab]();
+    }
+    const qtyBySku = list => {
+        const m = {};
+        list.forEach(o => {
+            let it = [];
+            try {
+                it = JSON.parse(o.items_json || '[]');
+            }
+            catch (e) { }
+            if (['cancelled', 'failed'].includes(o.status))
+                return;
+            it.forEach(i => m[i.sku] = (m[i.sku] || 0) + (+i.qty || 0));
+        });
+        return m;
+    };
+    const cod = o => String(o.payment).toLowerCase() === 'paid' || o.payment === 'subscription' ? 0 : o.total;
+    function overview() {
+        const td = ist(0), tm = ist(1), T = D.orders.filter(o => o.delivery_date === td), M = D.orders.filter(o => o.delivery_date === tm && !['cancelled', 'failed'].includes(o.status)), L = D.leads.filter(l => l.status === 'new'), od = L.filter(l => l.priority === 'high' && (Date.now() - Date.parse(l.created_at)) / 6e4 > (l.sla_minutes || 15));
+        const need = qtyBySku(D.orders.filter(o => o.delivery_date === tm)), low = D.stock.filter(s => s.date === tm && s.capacity && (need[s.sku] || 0) >= s.capacity * .9);
+        return '<div class="kpis"><div class="kpi"><span>Deliveries today</span><b>' + T.length + '</b>' + T.filter(o => o.status === 'delivered').length + ' delivered</div><div class="kpi"><span>Orders for tomorrow</span><b id="k-tm">' + M.length + '</b>₹' + M.reduce((a, o) => a + o.total, 0) + '</div><div class="kpi"><span>Cash to collect tomorrow</span><b>₹' + M.reduce((a, o) => a + cod(o), 0) + '</b>online paid: ₹' + M.reduce((a, o) => a + (o.total - cod(o)), 0) + '</div><div class="kpi' + (L.length ? ' warn' : '') + '"><span>New leads</span><b id="k-leads">' + L.length + '</b></div><div class="kpi' + (od.length ? ' bad' : '') + '"><span>Leads past SLA</span><b id="k-od">' + od.length + '</b></div><div class="kpi' + (low.length ? ' bad' : '') + '"><span>Stock alerts (tomorrow)</span><b id="k-low">' + low.length + '</b>' + low.map(s => esc(SKU[s.sku] || s.sku)).join(', ') + '</div></div>';
+    }
+    function csv(rows) {
+        const c = v => {
+            v = String(v == null ? '' : v);
+            if (/^[=+\-@]/.test(v))
+                v = "'" + v;
+            return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+        };
+        return rows.map(r => r.map(c).join(',')).join('\n');
+    }
+    const fo = () => D.orders.filter(o => o.delivery_date === date && (!filt.status || o.status === filt.status) && (!filt.q || (o.order_id + o.customer_name + o.phone + o.area).toLowerCase().includes(filt.q.toLowerCase())));
+    function orders() {
+        const L = fo();
+        return '<div class="bar"><label>Date <input type="date" id="d" value="' + date + '"></label><select id="fs" aria-label="Status"><option value="">All statuses</option>' + ST.map(s => '<option' + (filt.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select><input id="fq" placeholder="Search name, phone, area" value="' + esc(filt.q) + '" aria-label="Search"><button class="btn" id="exp" type="button">Export CSV</button><b id="cnt">' + L.length + ' orders</b></div><div class="tw"><table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Rider</th><th></th></tr></thead><tbody>' + L.map(o => '<tr data-o="' + esc(o.order_id) + '"><td><b>' + esc(o.order_id) + '</b><br><span class="tag' + (o.payment === 'paid' ? '' : ' wa') + '">' + esc(o.payment) + '</span></td><td>' + esc(o.customer_name) + '<br><a href="tel:' + esc(o.phone) + '">' + esc(o.phone) + '</a><br>' + esc(o.area) + '</td><td>' + esc(o.items) + '</td><td>₹' + esc(o.total) + '</td><td><select data-f="status" aria-label="Status for ' + esc(o.order_id) + '">' + ST.map(s => '<option' + (o.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></td><td><input data-f="rider" value="' + esc(o.rider) + '" aria-label="Rider" size="8"></td><td><button class="btn pri" data-save>Save</button></td></tr>').join('') + '</tbody></table></div>';
+    }
+    function routes() {
+        const L = D.orders.filter(o => o.delivery_date === date && !['cancelled', 'failed'].includes(o.status)), by = {};
+        L.forEach(o => (by[o.area || 'Unassigned'] = by[o.area || 'Unassigned'] || []).push(o));
+        const need = qtyBySku(L);
+        return '<div class="bar"><label>Date <input type="date" id="d" value="' + date + '"></label><button class="btn" onclick="print()" type="button">Print</button><b>' + L.length + ' stops · collect ₹' + L.reduce((a, o) => a + cod(o), 0) + '</b></div><div class="area"><h3>Load list</h3>' + (Object.keys(need).map(k => esc(SKU[k] || k) + ': <b>' + need[k] + '</b>').join(' · ') || 'Nothing to load') + '</div>' + Object.keys(by).sort().map(a => '<div class="area" data-area="' + esc(a) + '"><h3>' + esc(a) + ' <span class="tag">' + by[a].length + ' stops</span></h3>' + by[a].map(o => '<div class="stop"><b>' + esc(o.customer_name) + '</b> · <a href="tel:' + esc(o.phone) + '">' + esc(o.phone) + '</a> · ' + esc(o.slot) + '<br>' + esc(o.address) + ' · <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address) + '">Map</a><br>' + esc(o.items) + ' · <b>' + (cod(o) ? 'Collect ₹' + cod(o) : 'Paid') + '</b></div>').join('') + '</div>').join('');
+    }
+    function stock() {
+        const need = qtyBySku(D.orders.filter(o => o.delivery_date === date));
+        return '<div class="bar"><label>Date <input type="date" id="d" value="' + date + '"></label></div><div class="tw"><table><thead><tr><th>Product</th><th>Capacity</th><th>Produced</th><th>Ordered</th><th>Remaining</th><th></th></tr></thead><tbody>' + Object.keys(SKU).map(k => {
+            const s = D.stock.find(x => x.sku === k && x.date === date) || {
+                capacity: 0, produced: 0
+            }, n = need[k] || 0, rem = (s.capacity || 0) - n;
+            return '<tr data-sku="' + k + '"><td>' + esc(SKU[k]) + '</td><td><input type="number" min="0" data-f="capacity" value="' + s.capacity + '" aria-label="Capacity ' + esc(SKU[k]) + '" style="width:90px"></td><td><input type="number" min="0" data-f="produced" value="' + s.produced + '" aria-label="Produced ' + esc(SKU[k]) + '" style="width:90px"></td><td>' + n + '</td><td class="' + (s.capacity && rem < s.capacity * .1 ? 'bad' : '') + '"><b>' + (s.capacity ? rem : '–') + '</b>' + (s.capacity && rem < s.capacity * .1 ? ' <span class="tag hi">low</span>' : '') + '</td><td><button class="btn pri" data-save>Save</button></td></tr>';
+        }).join('') + '</tbody></table></div>';
+    }
+    function leads() {
+        return '<div class="tw"><table><thead><tr><th>Lead</th><th>Detail</th><th>Status</th><th>Assignee</th><th>Note</th><th></th></tr></thead><tbody>' + D.leads.map(l => {
+            const age = Math.round((Date.now() - Date.parse(l.created_at)) / 6e4), over = l.status === 'new' && l.priority === 'high' && age > (l.sla_minutes || 15);
+            return '<tr data-l="' + esc(l.lead_id) + '"><td><b>' + esc(l.lead_id) + '</b><br><span class="tag' + (l.priority === 'high' ? ' hi' : '') + '">' + esc(l.type) + '</span><br><a href="tel:' + esc(l.phone) + '">' + esc(l.phone) + '</a><br><span class="' + (over ? 'bad' : '') + '">' + age + ' min old' + (over ? ' · PAST SLA' : '') + '</span></td><td>' + esc(l.detail) + '<br><span style="color:var(--muted)">' + esc(l.basket) + '</span></td><td><select data-f="status" aria-label="Status for ' + esc(l.lead_id) + '">' + LS.map(s => '<option' + (l.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></td><td><input data-f="assignee" value="' + esc(l.assignee) + '" aria-label="Assignee" size="8"></td><td><input data-f="note" value="' + esc(l.note) + '" aria-label="Note"></td><td><button class="btn pri" data-save>Save</button></td></tr>';
+        }).join('') + '</tbody></table></div>';
+    }
+    $('#nav').onclick = e => {
+        const b = e.target.closest('[data-t]');
+        if (b) {
+            tab = b.dataset.t;
+            draw();
+        }
+    };
+    $('#app').onchange = e => {
+        if (e.target.id === 'd') {
+            date = e.target.value;
+            draw();
+        }
+        else if (e.target.id === 'fs') {
+            filt.status = e.target.value;
+            draw();
+        }
+    };
+    $('#app').oninput = e => {
+        if (e.target.id === 'fq') {
+            filt.q = e.target.value;
+            const p = e.target.selectionStart;
+            draw();
+            const n = $('#fq');
+            n.focus();
+            n.setSelectionRange(p, p);
+        }
+    };
+    $('#app').onclick = async (e) => {
+        if (e.target.id === 'exp') {
+            const L = fo(), t = csv([['order_id', 'date', 'status', 'customer', 'phone', 'area', 'address', 'items', 'total', 'payment', 'rider']].concat(L.map(o => [o.order_id, o.delivery_date, o.status, o.customer_name, o.phone, o.area, o.address, o.items, o.total, o.payment, o.rider]))), a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([t], { type: 'text/csv' }));
+            a.download = 'orders-' + date + '.csv';
+            a.click();
+            window.__csv = t;
+            return;
+        }
+        const b = e.target.closest('[data-save]');
+        if (!b)
+            return;
+        const tr = b.closest('tr'), v = f => (tr.querySelector('[data-f="' + f + '"]') || {}).value;
+        err('');
+        try {
+            if (tr.dataset.o) {
+                const o = D.orders.find(x => x.order_id === tr.dataset.o), st = v('status');
+                let col;
+                if (st === 'delivered' && o.status !== 'delivered') {
+                    col = cod(o);
+                    const a = prompt('Cash collected (₹)', col);
+                    if (a === null)
+                        return;
+                    col = +a;
+                }
+                await call('order_update', {
+                    order_id: o.order_id, status: st, rider: v('rider'), notes: o.notes, collected_inr: col
+                });
+                Object.assign(o, {
+                    status: st, rider: v('rider')
+                });
+            }
+            else if (tr.dataset.l) {
+                const l = D.leads.find(x => x.lead_id === tr.dataset.l);
+                await call('lead_update', {
+                    lead_id: l.lead_id, status: v('status'), assignee: v('assignee'), note: v('note')
+                });
+                Object.assign(l, {
+                    status: v('status'), assignee: v('assignee'), note: v('note')
+                });
+            }
+            else if (tr.dataset.sku) {
+                const r = await call('stock_set', {
+                    sku: tr.dataset.sku, date, capacity: v('capacity'), produced: v('produced')
+                });
+                const i = D.stock.findIndex(x => x.sku === tr.dataset.sku && x.date === date), n = {
+                    stock_id: r.stock_id, sku: tr.dataset.sku, date, capacity: +v('capacity'), produced: +v('produced'), notes: ''
+                };
+                if (i >= 0)
+                    D.stock[i] = n;
+                else
+                    D.stock.push(n);
+            }
+            draw();
+            $('#err').textContent = '';
+            b.focus();
+        }
+        catch (x) {
+            if (String(x.message) !== '401')
+                err('Could not save: ' + x.message);
+        }
+    };
+    $('#login').onsubmit = async (e) => {
+        e.preventDefault();
+        key = $('#key').value;
+        if (!API) {
+            err('Set adminApi in this page (see README).');
+            return;
+        }
+        try {
+            try {
+                sessionStorage.setItem('vaigai-admin', key);
+            }
+            catch (x) { }
+            await enter();
+        }
+        catch (x) {
+            if (String(x.message) !== '401')
+                err('Login failed: ' + x.message);
+        }
+    };
+    $('#out').onclick = () => logout('');
+    if (API && key)
+        enter().catch(() => { });
+})();
+</script></body></html>

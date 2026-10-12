@@ -1,0 +1,25 @@
+id,subject,scene,props,light,angle,ratio,used_on_site,filename,priority,alt_text
+P01,Glass bottle milk 500 ml (hero),"Seamless teal/green backdrop, wet bottle, condensation","Splash of milk, droplets",Softbox left + rim light right,"Eye level, slight low angle",16:9,"Hero slide 1, carousel, OG share",vaigai-milk-bottle-crown-splash,must,Vaigai Milk glass bottle in a crown splash of fresh milk
+P02,"Glass bottle milk, no splash",Same backdrop,None,Same,Eye level,4:5,"Product card, cutout",vaigai-milk-bottle-clean,must,Vaigai Milk glass bottle with condensation
+P03,Fresh milk carton 500 ml,"Black or dark backdrop, wet",Water droplets,"Strong top light, dark card for contrast",3/4 view,16:9,"Quality section, flavour scene",vaigai-fresh-milk-carton-500ml,must,Vaigai Fresh 500 ml milk carton
+P04,Badam flavoured milk bottle,"Teal backdrop, almonds in air","Almond slices, saffron strands",Softbox + backlight,Tilted 20 degrees,16:9,"Flavour scene, carousel",vaigai-badam-flavoured-milk-bottle,must,Vaigai Badam flavoured milk bottle with almonds
+P05,Farm ghee jar with spoon,"Teal backdrop, golden drip",Wooden spoon,Warm key light,Slight high angle,16:9,"Hero slide 2, carousel",vaigai-farm-ghee-jar,must,Vaigai Farm Ghee jar with a wooden spoon
+P06,Set curd in clay pot,"Teal backdrop, blueberries, almonds","Jute twine, tag",Soft window style light,Eye level,16:9,"Hero slide 4, moments",vaigai-set-curd-clay-pot,must,Vaigai set curd in a traditional clay pot
+P07,Fresh butter block on slate,"Teal backdrop, salt crystals","Butter knife, slate",Side light for texture,45 degrees,16:9,Hero slide 3,vaigai-fresh-butter-block,must,Block of Vaigai fresh butter on a slate board
+P08,"Paneer, ghee, curd group","Floating composition, mint leaves","Knives, mint",Even soft light,Wide,16:9,Beyond milk section,vaigai-paneer-ghee-curd-range,should,"Vaigai paneer, ghee and set curd"
+P09,Full product family circle,"Studio, all SKUs arranged in a ring","All products, milk splash ring",Even soft light,Straight on,16:9,"Order section, OG",vaigai-milk-product-range,should,The Vaigai Milk product range
+F01,Aerial farm at sunrise (drone),"Farm fields, cattle grazing",-,Golden hour,Aerial 60 m,16:9,Story scene 1,madurai-dairy-farm-cattle-aerial-view,must,Aerial view of a Madurai dairy farm with grazing cattle
+F02,"Dairy shed with cows, temple tower in distance",Misty sunrise,-,Golden hour,Eye level wide,16:9,Story scene 2,vaigai-milk-dairy-madurai-sunrise,must,Vaigai Milk dairy in Madurai at sunrise
+F03,"Milking (hands, bucket, steel can)",Dairy shed,Steel can,Natural light,Close up,3:2,"Story, blog",vaigai-milking-at-dawn,should,Farmer milking a cow at dawn at the Vaigai Milk farm
+F04,Chilling tank and quality testing,Dairy lab,"Test strips, thermometer",Clean white light,Medium,3:2,Quality section,vaigai-milk-quality-testing,should,Quality testing of milk at the Vaigai Milk dairy
+F05,Bottling line,Dairy,Bottles on conveyor,Clean light,Medium,3:2,Quality section,vaigai-milk-bottling-line,could,Glass bottles being filled at the Vaigai Milk dairy
+D01,Bottles in wooden crate on doorstep,Madurai doorstep at 5:30 AM,"Brass pot, kolam",Dawn light,Eye level,16:9,Story scene 3,vaigai-milk-glass-bottles-wooden-crate,must,Two Vaigai Milk glass bottles in a wooden crate on a doorstep
+D02,Rider loading vans,Dispatch area,Crates,Dawn light,Medium,3:2,"About, blog",vaigai-milk-delivery-rider,should,Vaigai Milk delivery rider loading crates at dawn
+D03,Filter coffee being poured,Madurai kitchen,"Davara tumbler, steel",Window light,Close up,4:5,"Moments, recipe",vaigai-filter-coffee-davara,should,Filter coffee in a davara tumbler made with Vaigai Milk
+R01,Curd rice,Banana leaf,"Pomegranate, curry leaf",Natural light,Overhead,4:3,Recipe,vaigai-curd-rice-recipe,should,Curd rice served on a banana leaf
+R02,Ghee pongal,Brass vessel,"Cashews, pepper",Natural light,45 degrees,4:3,Recipe,vaigai-ghee-pongal-recipe,should,Ven pongal with ghee
+R03,Butter dosa,Plate,Chutney,Natural light,45 degrees,4:3,Recipe,vaigai-butter-dosa-recipe,could,Crisp dosa with a block of Vaigai butter
+R04,Badam milk glass,"Glass, saffron",Almonds,Backlight,Eye level,4:5,Recipe,vaigai-badam-milk-recipe,could,Chilled badam milk in a glass
+R05,Payasam,Bowl,Cardamom,Natural light,45 degrees,4:3,Recipe,vaigai-semiya-payasam-recipe,could,Semiya payasam made with Vaigai Milk
+T01,Team / founder portrait,Dairy,-,Soft light,Waist up,4:5,About,vaigai-milk-team,could,The Vaigai Milk team in Madurai
+V01,Brand film clips (10 to 20 sec each),"Farm, dairy, doorstep, product splash",-,Same as stills,Gimbal / tripod,"16:9, 4K",Hero film,vaigai-brand-film-raw,should,Vaigai Milk brand film

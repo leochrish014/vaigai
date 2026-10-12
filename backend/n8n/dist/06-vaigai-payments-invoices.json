@@ -1,0 +1,1567 @@
+{
+  "name": "Vaigai 06 · Payments (Razorpay) and GST invoices",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-pay-create",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "f41e3594-17d1-4208-8289-6200de24e25e",
+      "name": "Pay Create Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        200
+      ],
+      "webhookId": "d06f6907-c6d5-414a-bd6c-4db551576d58"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9755b46b-dbfb-4109-a075-e064045ba26c",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "53e0c0e0-7acb-4d97-9d4b-7eadecd3b046",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "c663d3a9-aeff-4999-9cb4-0d10f896711d",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "ba1ad046-570e-47a2-9be7-1acd0eeabfa5",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "ac2bd5a9-d51a-4536-8839-76266db179b3",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "e72aa975-7253-4f55-bac5-d42f8eb85ec8",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "04a54885-3ce1-49a8-b6bb-578c594402c1",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "a20019b2-c6eb-454f-b964-df99dca76d6a",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "66bbedcd-86e3-4576-96d5-10b9c676ffe3",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "1ba6de45-679e-4ed6-8742-38dcdd1b1461",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "18371beb-10ea-4bca-ba6c-f972c915a9a6",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "7726ae60-5194-4bf4-88f4-a3ebfb4a1a5d",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "5f6a9571-1f32-4cb2-9b28-da42a692a39d",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "f32904d6-1eff-49e7-bb48-09ec70628fce",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "984b78e0-ccb8-4b4c-9629-ff7d08d29a3e",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "e8dcf9ae-2e25-4941-9d0d-f533b9dcc2ae",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "a8c3b588-1385-49e4-858e-f3e885bd583d",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "f2413533-5740-4a1e-8b10-d5751612b86b",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a35175db-92c5-4ef1-8227-a9f1e62f074d",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "29e64a5c-606a-4651-af4d-96a56d58a964",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a15f31a1-f8bd-4185-96a9-53c0b54b6ef7",
+      "name": "Key OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "10bbcec9-0783-482f-b30d-c20e03236274",
+      "name": "Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "85efdd6a-4743-4a86-a6cc-8c4ae8e5e317",
+      "name": "Read Orders (create)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$('Pay Create Webhook').first().json.body||{};const id=String(b.order_id||'').toUpperCase().slice(0,30);\nconst o=$input.all().map(i=>i.json).find(r=>String(r.order_id||'').toUpperCase()===id);\nif(!o||['online_pending','failed'].indexOf(String(o.payment))<0||String(o.status||'').toLowerCase()==='cancelled')return [{json:{ok:false,response:{ok:false,error:'order not payable'}}}];\nconst total=Math.round(Number(o.total));if(!(total>0))return [{json:{ok:false,response:{ok:false,error:'bad amount'}}}];\nreturn [{json:{ok:true,order_id:o.order_id,amount:total*100,name:o.customer_name,phone:o.phone}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "0c6f199c-906d-46e7-8ad6-0c87e799dad2",
+      "name": "Find Payable Order",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "46b78352-31f4-43f0-bf94-989535272906",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9414594c-3669-401e-9991-a5745c1c0cab",
+      "name": "Payable?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "18d1ac10-9476-48b2-a48c-a1a7e759e8e7",
+      "name": "Respond Not Payable",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.razorpay.com/v1/orders",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({amount:$json.amount,currency:'INR',receipt:$json.order_id,notes:{order_id:$json.order_id} }) }}",
+        "options": {}
+      },
+      "id": "064e3041-90b7-4510-b239-562c8c94c0b0",
+      "name": "Razorpay: create order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        140
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "",
+          "name": "Razorpay (key id + secret)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const o=$('Find Payable Order').first().json,rz=$input.first().json;\nif(!rz.id)return [{json:{ok:false,response:{ok:false,error:'payment provider error'}}}];\nreturn [{json:{ok:true,response:{ok:true,key_id:$('Config').first().json.razorpay_key_id,razorpay_order_id:rz.id,amount:o.amount,currency:'INR',description:'Vaigai Milk order '+o.order_id,prefill:{name:o.name,contact:'+91'+o.phone}}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "a51675ff-df79-487c-9d8c-6cb4600c5a83",
+      "name": "Shape Checkout Options",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "8cb846d6-25d0-4a1c-9ad4-cffa0513f2c9",
+      "name": "Respond Checkout Options",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-pay-verify",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "c082075e-8ea3-4579-9d11-6310e3730110",
+      "name": "Pay Verify Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        640
+      ],
+      "webhookId": "f94576a3-fa1c-4974-85b7-1cef8b476d87"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b2bc2fd-37f3-44d9-96e8-24266f2959ec",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "b1feab0c-7354-4b60-90e5-ad7308015b3c",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "d4d92954-8f3c-4389-9d5f-a3006f87b327",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "42c49518-fd48-478a-aaf2-4c6236159644",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "0bd957ec-be14-437b-b81e-f3e3f5d75256",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "a9daaf7d-5f6c-4d2c-89e3-993629a34866",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "9131e1eb-ba6e-4693-9eef-432868c3ca39",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "ac64c0f3-43df-4c0d-aa61-5a504869b45d",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "8840e93e-c918-43c8-8748-ea3f49d82034",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "e7d44952-a21a-4f16-80af-cccfa014e78a",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "bc9e8b81-7d1e-459c-94af-87a8697e1c1f",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "962acc6d-857b-4b57-9aa2-93337637209c",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "6724ba9c-6b83-4ccb-b63f-ca0d62aa99cd",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "690d5cf5-051e-4096-a408-dcf908199cf2",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "4aa468c8-1eec-4dd7-9f96-0c7f60c43384",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "f14eb330-64d8-4200-99f0-b1f016fa1175",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "b825cd85-c02e-4eb8-aedd-1d0b952e4200",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "dd6b0654-3e14-4f98-8b63-ddc6b43797ad",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "7d3e8eac-d5c4-4726-aa9f-d4a09f3488ef",
+      "name": "Config (verify)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "a6228ce0-8284-4cf7-89fc-a04218162baf",
+              "leftValue": "={{ $json.headers['x-vaigai-key'] }}",
+              "rightValue": "={{ $json.api_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7b0a2b6b-f750-4fd4-9c8d-56023d41ab60",
+      "name": "Key OK? (verify)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "1455200b-aa67-429b-852a-21bd06059d0f",
+      "name": "Unauthorized (verify)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "dataPropertyName": "expected",
+        "secret": "={{ $('Config (verify)').first().json.razorpay_key_secret }}",
+        "encoding": "hex",
+        "value": "={{ $json.body.razorpay_order_id + '|' + $json.body.razorpay_payment_id }}"
+      },
+      "id": "25c90b53-2d26-4ce7-a990-39bcbd2eb8e0",
+      "name": "HMAC signature",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        660,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* GST invoice engine. Prices on the site are MRP (GST included). Rates below must be confirmed with your CA. */\nconst InvoiceEngine = (function () {\n    const CFG = {\n        seller: {\n            name: 'Vaigai Milk', gstin: '33XXXXXXXXXXXZX', address: 'Sample Street, Goripalayam, Madurai, Tamil Nadu 625002', state_code: '33', state: 'Tamil Nadu', fssai: 'FSSAI-LICENCE-NUMBER', phone: '+91 00000 00000', email: 'hello@example.com'\n        },\n        rates: {\n            'VGM-CARTON-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-HERO-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-BADAM-250ml': {\n                hsn: '2202', rate: 5, desc: 'Flavoured milk', confirm: true\n            }, 'VGM-GHEE-500ml': {\n                hsn: '0405', rate: 5, desc: 'Ghee'\n            }, 'VGM-CURD-400g': {\n                hsn: '0403', rate: 5, desc: 'Curd, pre-packaged', confirm: true\n            }, 'VGM-BUTTER-200g': {\n                hsn: '0405', rate: 5, desc: 'Butter'\n            }\n        }\n    };\n    const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;\n    function fy(d) {\n        const y = d.getUTCFullYear(), m = d.getUTCMonth();\n        const a = m >= 3 ? y : y - 1;\n        return String(a).slice(2) + '-' + String(a + 1).slice(2);\n    }\n    function invoiceNo(seq, d) {\n        return 'VGM/' + fy(d) + '/' + String(seq).padStart(6, '0');\n    }\n    function nextSeq(existing, d) {\n        const f = fy(d);\n        let max = 0;\n        (existing || []).forEach(n => {\n            const m = String(n).match(/^VGM\\/(\\d\\d-\\d\\d)\\/(\\d+)$/);\n            if (m && m[1] === f)\n                max = Math.max(max, +m[2]);\n        });\n        return max + 1;\n    }\n    function compute(items, opts) {\n        opts = opts || {};\n        const intra = String(opts.state_code || CFG.seller.state_code) === CFG.seller.state_code;\n        let gross0 = 0;\n        items.forEach(i => gross0 += Math.max(0, i.qty | 0) * i.unit_price);\n        const disc = Math.min(Math.max(0, +opts.discount || 0), gross0);\n        const f = gross0 ? (gross0 - disc) / gross0 : 1;\n        const lines = items.filter(i => (i.qty | 0) > 0).map(i => {\n            const t = CFG.rates[i.sku] || {\n                hsn: '0401', rate: 0, desc: i.name\n            }, gross = r2(i.qty * i.unit_price * f), taxable = r2(gross * 100 / (100 + t.rate)), tax = r2(gross - taxable);\n            const cgst = intra ? r2(tax / 2) : 0, sgst = intra ? r2(tax - cgst) : 0, igst = intra ? 0 : tax;\n            return {\n                sku: i.sku, name: i.name, desc: t.desc, hsn: t.hsn, qty: i.qty | 0, unit_price: i.unit_price, rate: t.rate, gross, taxable, cgst, sgst, igst\n            };\n        });\n        const S = k => r2(lines.reduce((a, l) => a + l[k], 0));\n        const grossT = S('gross'), total = Math.round(grossT);\n        return {\n            lines, discount: r2(disc), taxable_total: S('taxable'), cgst: S('cgst'), sgst: S('sgst'), igst: S('igst'), tax_total: r2(S('cgst') + S('sgst') + S('igst')), gross_total: grossT, round_off: r2(total - grossT), total, intra_state: intra\n        };\n    }\n    function safeEqual(a, b) {\n        a = String(a);\n        b = String(b);\n        if (a.length !== b.length)\n            return false;\n        let d = 0;\n        for (let i = 0; i < a.length; i++)\n            d |= a.charCodeAt(i) ^ b.charCodeAt(i);\n        return d === 0;\n    }\n    return {\n        CFG, compute, invoiceNo, nextSeq, fy, safeEqual, r2\n    };\n})();\n\nconst b=$('Pay Verify Webhook').first().json.body||{};\nconst ok=!!b.order_id&&!!b.razorpay_payment_id&&InvoiceEngine.safeEqual($json.expected||'',b.razorpay_signature||'');\nreturn [{json:{ok,order_id:String(b.order_id||'').toUpperCase().slice(0,30),payment_id:String(b.razorpay_payment_id||'').slice(0,40),response:ok?null:{ok:false,error:'signature mismatch'}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "354fecde-4a48-4a4c-90dc-0031241a7d2a",
+      "name": "Compare signature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "b9673ff5-c3ff-42d1-af5b-0665f66da30d",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6aa12545-c2c7-4a7f-a0db-e95a1cbd438e",
+      "name": "Signature valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "aeaeefb9-e14c-475f-b52a-7ac7e4bc16f1",
+      "name": "Respond Invalid Signature",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-razorpay-webhook",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "a42ada14-df6b-4cde-9c1a-1e3d3858dc71",
+      "name": "Razorpay Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1060
+      ],
+      "webhookId": "b6ea9baf-912b-4ed0-9d94-9579b4d80b8f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bc537beb-dc0c-4158-afb7-f50b5773f572",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "a8a6b0f1-d09e-4ead-b384-8645054df117",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "0bade548-5070-4965-920d-62cf5f9a2abc",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "61369036-e737-4782-aa30-1930f3db46cd",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "db2aa613-5f0a-473e-971c-563b07010629",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "91af60e3-c420-4272-9699-f06ed29129e6",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "8a631ddf-8b8d-4d8e-aae6-5d4af39f0d36",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "5530a058-7079-4ee7-9210-3334a7afd4ae",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "77d51982-eafc-4fbe-a84a-9d84bf3271dd",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "d673b5d9-94d2-4a33-bc7c-a934940a78c7",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "a055f381-ff9c-4543-aa5d-6759455df775",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "7d4c1618-60c1-41e7-95dc-7a896abdd44c",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "a06cbf6b-1dab-4618-8a14-203138ffccfe",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "b7c493e6-ae06-40c3-bdbd-8b398831a32e",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "8d240985-6c17-4c84-baaf-94d1b5455f41",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "7048ec4c-10aa-4e96-b7d1-0c61dd52c896",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "dc2001bc-ae42-46c5-8d4a-a44f4508b18c",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "c1e66f74-a0a1-4d7a-b5e2-a38206aed5cf",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "4c8074e3-af93-4c8f-94e6-42e1211dc5ee",
+      "name": "Config (webhook)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "dataPropertyName": "expected",
+        "secret": "={{ $('Config (webhook)').first().json.razorpay_webhook_secret }}",
+        "encoding": "hex",
+        "binaryData": true,
+        "binaryPropertyName": "data"
+      },
+      "id": "1712a528-82ec-4f30-8c5b-24958f177f3c",
+      "name": "HMAC webhook body",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        440,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* GST invoice engine. Prices on the site are MRP (GST included). Rates below must be confirmed with your CA. */\nconst InvoiceEngine = (function () {\n    const CFG = {\n        seller: {\n            name: 'Vaigai Milk', gstin: '33XXXXXXXXXXXZX', address: 'Sample Street, Goripalayam, Madurai, Tamil Nadu 625002', state_code: '33', state: 'Tamil Nadu', fssai: 'FSSAI-LICENCE-NUMBER', phone: '+91 00000 00000', email: 'hello@example.com'\n        },\n        rates: {\n            'VGM-CARTON-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-HERO-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-BADAM-250ml': {\n                hsn: '2202', rate: 5, desc: 'Flavoured milk', confirm: true\n            }, 'VGM-GHEE-500ml': {\n                hsn: '0405', rate: 5, desc: 'Ghee'\n            }, 'VGM-CURD-400g': {\n                hsn: '0403', rate: 5, desc: 'Curd, pre-packaged', confirm: true\n            }, 'VGM-BUTTER-200g': {\n                hsn: '0405', rate: 5, desc: 'Butter'\n            }\n        }\n    };\n    const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;\n    function fy(d) {\n        const y = d.getUTCFullYear(), m = d.getUTCMonth();\n        const a = m >= 3 ? y : y - 1;\n        return String(a).slice(2) + '-' + String(a + 1).slice(2);\n    }\n    function invoiceNo(seq, d) {\n        return 'VGM/' + fy(d) + '/' + String(seq).padStart(6, '0');\n    }\n    function nextSeq(existing, d) {\n        const f = fy(d);\n        let max = 0;\n        (existing || []).forEach(n => {\n            const m = String(n).match(/^VGM\\/(\\d\\d-\\d\\d)\\/(\\d+)$/);\n            if (m && m[1] === f)\n                max = Math.max(max, +m[2]);\n        });\n        return max + 1;\n    }\n    function compute(items, opts) {\n        opts = opts || {};\n        const intra = String(opts.state_code || CFG.seller.state_code) === CFG.seller.state_code;\n        let gross0 = 0;\n        items.forEach(i => gross0 += Math.max(0, i.qty | 0) * i.unit_price);\n        const disc = Math.min(Math.max(0, +opts.discount || 0), gross0);\n        const f = gross0 ? (gross0 - disc) / gross0 : 1;\n        const lines = items.filter(i => (i.qty | 0) > 0).map(i => {\n            const t = CFG.rates[i.sku] || {\n                hsn: '0401', rate: 0, desc: i.name\n            }, gross = r2(i.qty * i.unit_price * f), taxable = r2(gross * 100 / (100 + t.rate)), tax = r2(gross - taxable);\n            const cgst = intra ? r2(tax / 2) : 0, sgst = intra ? r2(tax - cgst) : 0, igst = intra ? 0 : tax;\n            return {\n                sku: i.sku, name: i.name, desc: t.desc, hsn: t.hsn, qty: i.qty | 0, unit_price: i.unit_price, rate: t.rate, gross, taxable, cgst, sgst, igst\n            };\n        });\n        const S = k => r2(lines.reduce((a, l) => a + l[k], 0));\n        const grossT = S('gross'), total = Math.round(grossT);\n        return {\n            lines, discount: r2(disc), taxable_total: S('taxable'), cgst: S('cgst'), sgst: S('sgst'), igst: S('igst'), tax_total: r2(S('cgst') + S('sgst') + S('igst')), gross_total: grossT, round_off: r2(total - grossT), total, intra_state: intra\n        };\n    }\n    function safeEqual(a, b) {\n        a = String(a);\n        b = String(b);\n        if (a.length !== b.length)\n            return false;\n        let d = 0;\n        for (let i = 0; i < a.length; i++)\n            d |= a.charCodeAt(i) ^ b.charCodeAt(i);\n        return d === 0;\n    }\n    return {\n        CFG, compute, invoiceNo, nextSeq, fy, safeEqual, r2\n    };\n})();\n\nconst w=$('Razorpay Webhook').first().json,sig=String((w.headers||{})['x-razorpay-signature']||'');\nconst ev=w.body||{};const ent=(((ev.payload||{}).payment||{}).entity)||{};\nconst ok=InvoiceEngine.safeEqual($json.expected||'',sig)&&ev.event==='payment.captured'&&!!(ent.notes&&ent.notes.order_id);\nreturn [{json:{ok,order_id:ok?String(ent.notes.order_id).toUpperCase().slice(0,30):'',payment_id:ok?String(ent.id||'').slice(0,40):'',response:{ok:true}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "9d45fd59-6a9c-4b1a-addb-c7810476205f",
+      "name": "Check webhook event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "fd799f6e-a8be-4857-bcb0-37c81464efd4",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1cf5d1e2-95f5-4230-aab9-d34547bdb81c",
+      "name": "Captured and valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":true,\"ignored\":true}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "6ef01ad1-1d9a-448b-904a-918f771cd95f",
+      "name": "Respond Ignored",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        1220
+      ]
+    },
+    {
+      "parameters": {
+        "action": "generate",
+        "dataPropertyName": "token",
+        "encodingType": "hex",
+        "stringLength": 24
+      },
+      "id": "10f8464b-9cc5-40cd-8adc-963b09949390",
+      "name": "Make invoice token",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (invoice)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "fd0a2f70-4e83-499e-9b92-06a0adb3b10e",
+      "name": "Read Orders (pay)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1540,
+        880
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (invoice)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Invoices"
+        },
+        "options": {}
+      },
+      "id": "bbaa5bdf-4ae8-4815-852f-23b33fe3b131",
+      "name": "Read Invoices",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1760,
+        880
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\n/* GST invoice engine. Prices on the site are MRP (GST included). Rates below must be confirmed with your CA. */\nconst InvoiceEngine = (function () {\n    const CFG = {\n        seller: {\n            name: 'Vaigai Milk', gstin: '33XXXXXXXXXXXZX', address: 'Sample Street, Goripalayam, Madurai, Tamil Nadu 625002', state_code: '33', state: 'Tamil Nadu', fssai: 'FSSAI-LICENCE-NUMBER', phone: '+91 00000 00000', email: 'hello@example.com'\n        },\n        rates: {\n            'VGM-CARTON-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-HERO-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-BADAM-250ml': {\n                hsn: '2202', rate: 5, desc: 'Flavoured milk', confirm: true\n            }, 'VGM-GHEE-500ml': {\n                hsn: '0405', rate: 5, desc: 'Ghee'\n            }, 'VGM-CURD-400g': {\n                hsn: '0403', rate: 5, desc: 'Curd, pre-packaged', confirm: true\n            }, 'VGM-BUTTER-200g': {\n                hsn: '0405', rate: 5, desc: 'Butter'\n            }\n        }\n    };\n    const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;\n    function fy(d) {\n        const y = d.getUTCFullYear(), m = d.getUTCMonth();\n        const a = m >= 3 ? y : y - 1;\n        return String(a).slice(2) + '-' + String(a + 1).slice(2);\n    }\n    function invoiceNo(seq, d) {\n        return 'VGM/' + fy(d) + '/' + String(seq).padStart(6, '0');\n    }\n    function nextSeq(existing, d) {\n        const f = fy(d);\n        let max = 0;\n        (existing || []).forEach(n => {\n            const m = String(n).match(/^VGM\\/(\\d\\d-\\d\\d)\\/(\\d+)$/);\n            if (m && m[1] === f)\n                max = Math.max(max, +m[2]);\n        });\n        return max + 1;\n    }\n    function compute(items, opts) {\n        opts = opts || {};\n        const intra = String(opts.state_code || CFG.seller.state_code) === CFG.seller.state_code;\n        let gross0 = 0;\n        items.forEach(i => gross0 += Math.max(0, i.qty | 0) * i.unit_price);\n        const disc = Math.min(Math.max(0, +opts.discount || 0), gross0);\n        const f = gross0 ? (gross0 - disc) / gross0 : 1;\n        const lines = items.filter(i => (i.qty | 0) > 0).map(i => {\n            const t = CFG.rates[i.sku] || {\n                hsn: '0401', rate: 0, desc: i.name\n            }, gross = r2(i.qty * i.unit_price * f), taxable = r2(gross * 100 / (100 + t.rate)), tax = r2(gross - taxable);\n            const cgst = intra ? r2(tax / 2) : 0, sgst = intra ? r2(tax - cgst) : 0, igst = intra ? 0 : tax;\n            return {\n                sku: i.sku, name: i.name, desc: t.desc, hsn: t.hsn, qty: i.qty | 0, unit_price: i.unit_price, rate: t.rate, gross, taxable, cgst, sgst, igst\n            };\n        });\n        const S = k => r2(lines.reduce((a, l) => a + l[k], 0));\n        const grossT = S('gross'), total = Math.round(grossT);\n        return {\n            lines, discount: r2(disc), taxable_total: S('taxable'), cgst: S('cgst'), sgst: S('sgst'), igst: S('igst'), tax_total: r2(S('cgst') + S('sgst') + S('igst')), gross_total: grossT, round_off: r2(total - grossT), total, intra_state: intra\n        };\n    }\n    function safeEqual(a, b) {\n        a = String(a);\n        b = String(b);\n        if (a.length !== b.length)\n            return false;\n        let d = 0;\n        for (let i = 0; i < a.length; i++)\n            d |= a.charCodeAt(i) ^ b.charCodeAt(i);\n        return d === 0;\n    }\n    return {\n        CFG, compute, invoiceNo, nextSeq, fy, safeEqual, r2\n    };\n})();\n\nconst ctx=$('Make invoice token').first().json;\nconst orders=$('Read Orders (pay)').all().map(i=>i.json),invs=$input.all().map(i=>i.json).filter(r=>r&&r.invoice_no);\nconst o=orders.find(r=>String(r.order_id||'').toUpperCase()===ctx.order_id);\nif(!o)return [{json:{ok:false,invoice_needed:false,response:{ok:false,error:'order not found'}}}];\nconst site=String($('Config (verify)').first().json.site_url||'').replace(/\\/$/,'');\nconst ex=invs.find(r=>String(r.order_id||'').toUpperCase()===ctx.order_id);\nif(ex)return [{json:{ok:true,invoice_needed:false,response:{ok:true,already:true,invoice_no:ex.invoice_no,invoice_url:site+'/invoice.html?id='+ctx.order_id+'&t='+ex.token}}}];\nlet it=[];try{it=JSON.parse(o.items_json||'[]')}catch(e){}\nconst lines=it.filter(i=>CATALOG[i.sku]).map(i=>({sku:i.sku,name:CATALOG[i.sku].n,qty:Math.max(1,Math.min(99,parseInt(i.qty,10)||1)),unit_price:CATALOG[i.sku].p}));\nconst calc=InvoiceEngine.compute(lines,{state_code:'33'});\nconst now=new Date(),no=InvoiceEngine.invoiceNo(InvoiceEngine.nextSeq(invs.map(r=>r.invoice_no),now),now);\nconst inv={invoice_no:no,invoice_date:now.toISOString().slice(0,10),order_id:ctx.order_id,token:ctx.token,customer_name:o.customer_name,phone:o.phone,address:o.address,place_of_supply:'Tamil Nadu (33)',lines_json:JSON.stringify(calc.lines),taxable_total:calc.taxable_total,cgst:calc.cgst,sgst:calc.sgst,igst:calc.igst,round_off:calc.round_off,total:calc.total,payment_id:ctx.payment_id,payment_mode:'online'};\nreturn [{json:{ok:true,invoice_needed:true,inv,order_update:{order_id:ctx.order_id,payment:'paid',payment_id:ctx.payment_id,paid_at:now.toISOString(),invoice_no:no},response:{ok:true,invoice_no:no,invoice_url:site+'/invoice.html?id='+ctx.order_id+'&t='+ctx.token,total:calc.total}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "24f26cc3-46f5-4bbf-9eff-4faa56479892",
+      "name": "Build Invoice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "221847ae-0f15-4721-a389-ae4c890516c8",
+              "leftValue": "={{ $json.invoice_needed }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6b54b5c5-3e35-4495-86b5-efaae91f591b",
+      "name": "Invoice needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (invoice)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Invoices"
+        },
+        "options": {},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "invoice_no": "={{ $json.inv.invoice_no }}",
+            "invoice_date": "={{ $json.inv.invoice_date }}",
+            "order_id": "={{ $json.inv.order_id }}",
+            "token": "={{ $json.inv.token }}",
+            "customer_name": "={{ $json.inv.customer_name }}",
+            "phone": "={{ $json.inv.phone }}",
+            "address": "={{ $json.inv.address }}",
+            "place_of_supply": "={{ $json.inv.place_of_supply }}",
+            "lines_json": "={{ $json.inv.lines_json }}",
+            "taxable_total": "={{ $json.inv.taxable_total }}",
+            "cgst": "={{ $json.inv.cgst }}",
+            "sgst": "={{ $json.inv.sgst }}",
+            "igst": "={{ $json.inv.igst }}",
+            "round_off": "={{ $json.inv.round_off }}",
+            "total": "={{ $json.inv.total }}",
+            "payment_id": "={{ $json.inv.payment_id }}",
+            "payment_mode": "={{ $json.inv.payment_mode }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        }
+      },
+      "id": "7b7d35a1-5dda-4657-98a7-4b6f53e40d3e",
+      "name": "Append invoice",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2420,
+        800
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (invoice)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $(\"Build Invoice\").first().json.order_update.order_id }}",
+            "payment": "={{ $(\"Build Invoice\").first().json.order_update.payment }}",
+            "payment_id": "={{ $(\"Build Invoice\").first().json.order_update.payment_id }}",
+            "paid_at": "={{ $(\"Build Invoice\").first().json.order_update.paid_at }}",
+            "invoice_no": "={{ $(\"Build Invoice\").first().json.order_update.invoice_no }}"
+          },
+          "matchingColumns": [
+            "order_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "1f8650c8-4312-461b-b016-f73052051d8e",
+      "name": "Mark order paid",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2640,
+        800
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Build Invoice').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "68a2f9fc-2934-4dfb-8c54-d4d00454dceb",
+      "name": "Respond Paid + Invoice",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2860,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "vaigai-invoice",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "2eff65d9-a674-4ad3-87d7-9be5bb2d5c21",
+      "name": "Invoice Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1500
+      ],
+      "webhookId": "fbd8e784-1a9b-48dc-a119-9aa2aa04eb89"
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config (invoice view)').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Invoices"
+        },
+        "options": {}
+      },
+      "id": "e40bda7b-17e6-43d1-9069-6bc891f25f23",
+      "name": "Read Invoices (view)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        1500
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "/* GST invoice engine. Prices on the site are MRP (GST included). Rates below must be confirmed with your CA. */\nconst InvoiceEngine = (function () {\n    const CFG = {\n        seller: {\n            name: 'Vaigai Milk', gstin: '33XXXXXXXXXXXZX', address: 'Sample Street, Goripalayam, Madurai, Tamil Nadu 625002', state_code: '33', state: 'Tamil Nadu', fssai: 'FSSAI-LICENCE-NUMBER', phone: '+91 00000 00000', email: 'hello@example.com'\n        },\n        rates: {\n            'VGM-CARTON-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-HERO-500ml': {\n                hsn: '0401', rate: 0, desc: 'Pasteurised milk'\n            }, 'VGM-BADAM-250ml': {\n                hsn: '2202', rate: 5, desc: 'Flavoured milk', confirm: true\n            }, 'VGM-GHEE-500ml': {\n                hsn: '0405', rate: 5, desc: 'Ghee'\n            }, 'VGM-CURD-400g': {\n                hsn: '0403', rate: 5, desc: 'Curd, pre-packaged', confirm: true\n            }, 'VGM-BUTTER-200g': {\n                hsn: '0405', rate: 5, desc: 'Butter'\n            }\n        }\n    };\n    const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;\n    function fy(d) {\n        const y = d.getUTCFullYear(), m = d.getUTCMonth();\n        const a = m >= 3 ? y : y - 1;\n        return String(a).slice(2) + '-' + String(a + 1).slice(2);\n    }\n    function invoiceNo(seq, d) {\n        return 'VGM/' + fy(d) + '/' + String(seq).padStart(6, '0');\n    }\n    function nextSeq(existing, d) {\n        const f = fy(d);\n        let max = 0;\n        (existing || []).forEach(n => {\n            const m = String(n).match(/^VGM\\/(\\d\\d-\\d\\d)\\/(\\d+)$/);\n            if (m && m[1] === f)\n                max = Math.max(max, +m[2]);\n        });\n        return max + 1;\n    }\n    function compute(items, opts) {\n        opts = opts || {};\n        const intra = String(opts.state_code || CFG.seller.state_code) === CFG.seller.state_code;\n        let gross0 = 0;\n        items.forEach(i => gross0 += Math.max(0, i.qty | 0) * i.unit_price);\n        const disc = Math.min(Math.max(0, +opts.discount || 0), gross0);\n        const f = gross0 ? (gross0 - disc) / gross0 : 1;\n        const lines = items.filter(i => (i.qty | 0) > 0).map(i => {\n            const t = CFG.rates[i.sku] || {\n                hsn: '0401', rate: 0, desc: i.name\n            }, gross = r2(i.qty * i.unit_price * f), taxable = r2(gross * 100 / (100 + t.rate)), tax = r2(gross - taxable);\n            const cgst = intra ? r2(tax / 2) : 0, sgst = intra ? r2(tax - cgst) : 0, igst = intra ? 0 : tax;\n            return {\n                sku: i.sku, name: i.name, desc: t.desc, hsn: t.hsn, qty: i.qty | 0, unit_price: i.unit_price, rate: t.rate, gross, taxable, cgst, sgst, igst\n            };\n        });\n        const S = k => r2(lines.reduce((a, l) => a + l[k], 0));\n        const grossT = S('gross'), total = Math.round(grossT);\n        return {\n            lines, discount: r2(disc), taxable_total: S('taxable'), cgst: S('cgst'), sgst: S('sgst'), igst: S('igst'), tax_total: r2(S('cgst') + S('sgst') + S('igst')), gross_total: grossT, round_off: r2(total - grossT), total, intra_state: intra\n        };\n    }\n    function safeEqual(a, b) {\n        a = String(a);\n        b = String(b);\n        if (a.length !== b.length)\n            return false;\n        let d = 0;\n        for (let i = 0; i < a.length; i++)\n            d |= a.charCodeAt(i) ^ b.charCodeAt(i);\n        return d === 0;\n    }\n    return {\n        CFG, compute, invoiceNo, nextSeq, fy, safeEqual, r2\n    };\n})();\n\nconst q=($('Invoice Webhook').first().json.query)||{};const id=String(q.id||'').toUpperCase().slice(0,30),t=String(q.t||'');\nconst r=$input.all().map(i=>i.json).find(x=>x&&x.order_id&&String(x.order_id).toUpperCase()===id);\nif(!r||!InvoiceEngine.safeEqual(String(r.token||''),t))return [{json:{found:false}}];\nlet lines=[];try{lines=JSON.parse(r.lines_json||'[]')}catch(e){}\nconst ph=String(r.phone||'');\nreturn [{json:{found:true,seller:InvoiceEngine.CFG.seller,invoice_no:r.invoice_no,invoice_date:r.invoice_date,order_id:r.order_id,customer:{name:r.customer_name,phone:ph.slice(0,2)+'XXXXXX'+ph.slice(-2),address:r.address},place_of_supply:r.place_of_supply,lines,taxable_total:+r.taxable_total,cgst:+r.cgst,sgst:+r.sgst,igst:+r.igst||0,round_off:+r.round_off,total:+r.total,payment_id:r.payment_id,payment_mode:r.payment_mode}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "ebaf4df7-3175-4929-abfd-d1d73a7212d9",
+      "name": "Find Invoice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        1500
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "621bd962-eca8-412e-a853-9087ad4e2683",
+      "name": "Respond Invoice",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        1500
+      ]
+    },
+    {
+      "parameters": {
+        "content": "PAYMENTS AND GST INVOICES\nRazorpay: create an account, copy Key Id + Key Secret, add an HTTP Basic Auth credential (user = Key Id, password = Key Secret) to 'Razorpay: create order', and set razorpay_key_id, razorpay_key_secret in each Config node (configure.js does it). Add a Razorpay webhook to /webhook/vaigai-razorpay-webhook for payment.captured with razorpay_webhook_secret.\nGST: confirm HSN codes and rates with your CA in InvoiceEngine (Code nodes 'Build Invoice' and 'Find Invoice'), and set your GSTIN, FSSAI number and address. Invoice numbers run VGM/FY/000001 per financial year.\nSheets tabs needed: Orders (new columns), Invoices (see sheets/Invoices.csv).",
+        "height": 300,
+        "width": 760
+      },
+      "id": "ae2bb42b-f08e-4e62-9b9e-195538cfa8af",
+      "name": "Note d504",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -120
+      ]
+    }
+  ],
+  "connections": {
+    "Pay Create Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Key OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK?": {
+      "main": [
+        [
+          {
+            "node": "Read Orders (create)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders (create)": {
+      "main": [
+        [
+          {
+            "node": "Find Payable Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Payable Order": {
+      "main": [
+        [
+          {
+            "node": "Payable?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payable?": {
+      "main": [
+        [
+          {
+            "node": "Razorpay: create order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Not Payable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Razorpay: create order": {
+      "main": [
+        [
+          {
+            "node": "Shape Checkout Options",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape Checkout Options": {
+      "main": [
+        [
+          {
+            "node": "Respond Checkout Options",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pay Verify Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (verify)": {
+      "main": [
+        [
+          {
+            "node": "Key OK? (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key OK? (verify)": {
+      "main": [
+        [
+          {
+            "node": "HMAC signature",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized (verify)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HMAC signature": {
+      "main": [
+        [
+          {
+            "node": "Compare signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare signature": {
+      "main": [
+        [
+          {
+            "node": "Signature valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signature valid?": {
+      "main": [
+        [
+          {
+            "node": "Make invoice token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Invalid Signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Razorpay Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config (webhook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config (webhook)": {
+      "main": [
+        [
+          {
+            "node": "HMAC webhook body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HMAC webhook body": {
+      "main": [
+        [
+          {
+            "node": "Check webhook event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check webhook event": {
+      "main": [
+        [
+          {
+            "node": "Captured and valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Captured and valid?": {
+      "main": [
+        [
+          {
+            "node": "Make invoice token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Ignored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make invoice token": {
+      "main": [
+        [
+          {
+            "node": "Read Orders (pay)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders (pay)": {
+      "main": [
+        [
+          {
+            "node": "Read Invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Invoices": {
+      "main": [
+        [
+          {
+            "node": "Build Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Invoice": {
+      "main": [
+        [
+          {
+            "node": "Invoice needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoice needed?": {
+      "main": [
+        [
+          {
+            "node": "Append invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Paid + Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append invoice": {
+      "main": [
+        [
+          {
+            "node": "Mark order paid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark order paid": {
+      "main": [
+        [
+          {
+            "node": "Respond Paid + Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoice Webhook": {
+      "main": [
+        [
+          {
+            "node": "Read Invoices (view)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Invoices (view)": {
+      "main": [
+        [
+          {
+            "node": "Find Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Invoice": {
+      "main": [
+        [
+          {
+            "node": "Respond Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

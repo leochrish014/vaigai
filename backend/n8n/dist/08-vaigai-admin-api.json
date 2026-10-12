@@ -1,0 +1,1247 @@
+{
+  "name": "Vaigai 08 · Admin API (orders, routes, stock, leads)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vaigai-admin",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "d762bb09-af48-4501-b43a-606542c21ed9",
+      "name": "Admin Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "bd16fbf7-4bf0-41da-b31e-165037f54a4b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c334a030-83e5-4202-9059-1c772aa4811e",
+              "name": "wa_verify_token",
+              "value": "CHANGE_ME_VERIFY_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "859c01c0-06e0-4356-9eff-751522d49ddb",
+              "name": "wa_app_secret",
+              "value": "PASTE_META_APP_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "ca31c598-5f2e-4c96-8b66-9b07529323c6",
+              "name": "ai_fallback",
+              "value": "yes",
+              "type": "string"
+            },
+            {
+              "id": "bec4ec5e-74c0-4270-ace0-ffc67240c089",
+              "name": "razorpay_key_id",
+              "value": "rzp_test_PASTE_KEY_ID",
+              "type": "string"
+            },
+            {
+              "id": "6ae1b85a-ab3f-4214-92cc-7cff29aa55d8",
+              "name": "razorpay_key_secret",
+              "value": "PASTE_RAZORPAY_KEY_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "b2accc79-12da-4b0c-b56a-d0c997726a1b",
+              "name": "razorpay_webhook_secret",
+              "value": "PASTE_RAZORPAY_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "0a0b36d8-b734-46f8-90e8-03e1fe4f4138",
+              "name": "site_url",
+              "value": "https://www.your-domain.com",
+              "type": "string"
+            },
+            {
+              "id": "90e5c1cb-d4d6-49f9-93ca-42f7a86f2d66",
+              "name": "admin_key",
+              "value": "CHANGE_ME_ADMIN_KEY",
+              "type": "string"
+            },
+            {
+              "id": "44d8644f-ae10-498a-84b4-401306813396",
+              "name": "rider_pins_json",
+              "value": "{\"1111\":\"Rider One\"}",
+              "type": "string"
+            },
+            {
+              "id": "b935cf0e-a020-47a8-a083-afb28dcd6a96",
+              "name": "api_key",
+              "value": "CHANGE_ME_WEBHOOK_KEY",
+              "type": "string"
+            },
+            {
+              "id": "0ae8b53c-af7b-432a-986a-b2bac0f59a1d",
+              "name": "sheet_id",
+              "value": "PASTE_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "37424825-0853-4e10-8441-1bd9f9a5831e",
+              "name": "wa_phone_id",
+              "value": "PASTE_WHATSAPP_PHONE_NUMBER_ID",
+              "type": "string"
+            },
+            {
+              "id": "93cdecb3-4327-4fc9-81e0-e30d1c0728a2",
+              "name": "wa_token",
+              "value": "PASTE_WHATSAPP_ACCESS_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "75171fcf-7a4d-459f-bf4e-f8b6981d8a1a",
+              "name": "staff_wa",
+              "value": "91XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "0a726d18-c8a9-4465-9ee9-610936c47bf5",
+              "name": "telegram_chat_id",
+              "value": "PASTE_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "8342404c-fe87-42e3-b298-2763f83885b7",
+              "name": "manager_telegram_chat_id",
+              "value": "PASTE_MANAGER_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "c1457d97-e9a6-4370-b8e6-8f0218e75af3",
+              "name": "base_url",
+              "value": "https://YOUR-N8N-HOST",
+              "type": "string"
+            },
+            {
+              "id": "52494ca6-bd1b-4d64-bca0-ef60779f64c2",
+              "name": "daily_capacity_json",
+              "value": "{\"VGM-CARTON-500ml\":600,\"VGM-HERO-500ml\":300,\"VGM-BADAM-250ml\":150,\"VGM-GHEE-500ml\":60,\"VGM-CURD-400g\":200,\"VGM-BUTTER-200g\":80}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "045d26e6-dca4-4caa-9297-49c96aeb4730",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "0c668070-f389-4db8-bb4c-1224ae8e98fd",
+              "leftValue": "={{ $json.headers['x-vaigai-admin'] }}",
+              "rightValue": "={{ $json.admin_key }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "068952de-edea-4c6a-a230-05e36382a99b",
+      "name": "Admin key OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "60b8a5c1-f95a-4314-85cc-886098eb1c9d",
+      "name": "Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "c2ed37b7-613d-483c-8ead-11d6435ec912",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "list_orders",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "list_orders"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "1bd12aa5-233a-40c1-8723-781336c44788",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "list_leads",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "list_leads"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "5cb21fec-0f00-4dd9-bc86-f866d12170d2",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "list_stock",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "list_stock"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "8b08bde3-4f69-452e-b404-c219b00555e8",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "order_update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "order_update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "ef6d0da9-70a6-4ba3-8d09-659040c8f2c1",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "lead_update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "lead_update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "92a8f073-0e30-4f3d-8d98-e10ea135074a",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "stock_set",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "stock_set"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "b6093024-06ba-4705-81d8-6d22ee0787e3",
+      "name": "Route action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"ok\":false,\"error\":\"unknown action\"}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "589e174c-2f40-43aa-8a3b-2d44bc5a8f16",
+      "name": "Respond Unknown Action",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "26bdc4b0-06d9-4b97-a661-11a4ed7c864a",
+      "name": "Read Orders (admin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$('Admin Webhook').first().json.body||{};const from=String(b.date_from||''),to=String(b.date_to||from),st=String(b.status||'');\nconst rows=$input.all().map(i=>i.json).filter(r=>r&&r.order_id).filter(r=>{const d=String(r.delivery_date||'').slice(0,10);return (!from||d>=from)&&(!to||d<=to)&&(!st||String(r.status)===st)}).sort((a,c)=>String(c.created_at).localeCompare(String(a.created_at))).slice(0,300);\nreturn [{json:{response:{ok:true,count:rows.length,orders:rows.map(r=>({order_id:r.order_id,created_at:r.created_at,status:r.status,customer_name:r.customer_name,phone:String(r.phone),address:r.address,area:r.area,pincode:r.pincode,slot:r.slot,delivery_date:String(r.delivery_date||'').slice(0,10),items:r.items,items_json:r.items_json,total:+r.total,payment:r.payment,invoice_no:r.invoice_no||'',rider:r.rider||'',notes:r.notes||'',collected_inr:r.collected_inr||''}))}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "ce34d3de-d22a-4211-8165-5924bdac47f2",
+      "name": "Shape orders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "03ffa27b-42af-4589-93c8-1cbdf56e2409",
+      "name": "Respond Orders",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "options": {}
+      },
+      "id": "726e04c8-7153-4c3a-9eb4-70bd73cdf1d0",
+      "name": "Read Leads (admin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        160
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows=$input.all().map(i=>i.json).filter(r=>r&&r.lead_id).sort((a,c)=>String(c.created_at).localeCompare(String(a.created_at))).slice(0,200);\nreturn [{json:{response:{ok:true,count:rows.length,leads:rows.map(r=>({lead_id:r.lead_id,created_at:r.created_at,type:r.type,priority:r.priority,status:r.status,phone:String(r.phone),detail:r.detail,basket:r.basket,sla_minutes:+r.sla_minutes||0,assignee:r.assignee||'',note:r.note||''}))}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "fa96324e-38c7-4b17-8a19-6383c205abe9",
+      "name": "Shape leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "b0d8addc-3f41-400b-b929-2641aec43517",
+      "name": "Respond Leads",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Stock"
+        },
+        "options": {}
+      },
+      "id": "ee8b999f-d336-4f3c-892f-f77ae8d1542e",
+      "name": "Read Stock (admin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        320
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows=$input.all().map(i=>i.json).filter(r=>r&&r.stock_id);\nreturn [{json:{response:{ok:true,stock:rows.map(r=>({stock_id:r.stock_id,sku:r.sku,date:String(r.date).slice(0,10),capacity:+r.capacity||0,produced:+r.produced||0,notes:r.notes||''}))}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "f08a3b05-47eb-4ee9-8857-6edf0827602d",
+      "name": "Shape stock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "147a2665-c800-4085-aa0f-182a52b8a955",
+      "name": "Respond Stock",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\nconst b=$('Admin Webhook').first().json.body||{};const OK=['received','confirmed','out_for_delivery','delivered','cancelled','needs_review','failed'];const clean=s=>String(s==null?'':s).replace(/[\\u0000-\\u001f]/g,' ').trim();const safe=s=>/^[=+\\-@]/.test(s)?\"'\"+s:s;\nconst id=clean(b.order_id).toUpperCase().slice(0,30),status=clean(b.status);\nif(!id||OK.indexOf(status)<0)return [{json:{ok:false,response:{ok:false,error:'valid order id and status required'}}}];\nconst upd={order_id:id,status,rider:safe(clean(b.rider).slice(0,40)),notes:safe(clean(b.notes).slice(0,300)),delivered_at:status==='delivered'?new Date().toISOString():'',collected_inr:status==='delivered'&&b.collected_inr!==undefined?String(Math.max(0,Math.min(100000,Math.round(+b.collected_inr||0)))):''};\nreturn [{json:{ok:true,upd,response:{ok:true,order_id:id,status}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "e36dfed3-30af-4900-96cd-2e63f48fa3ba",
+      "name": "Validate order update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "732cd191-7913-480c-aa04-b2c9cc467d34",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "101315af-85ea-4cc2-bf6d-c8dda060f42b",
+      "name": "Order update valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $('Validate order update').first().json.upd.order_id }}",
+            "status": "={{ $('Validate order update').first().json.upd.status }}",
+            "rider": "={{ $('Validate order update').first().json.upd.rider }}",
+            "notes": "={{ $('Validate order update').first().json.upd.notes }}",
+            "delivered_at": "={{ $('Validate order update').first().json.upd.delivered_at }}",
+            "collected_inr": "={{ $('Validate order update').first().json.upd.collected_inr }}"
+          },
+          "matchingColumns": [
+            "order_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "91cf4d8c-d1a9-423c-a97f-9399f08bbc26",
+      "name": "Update order",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1320,
+        440
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Validate order update').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "c5ba7cd1-7a23-470c-bde3-0e5804a267bc",
+      "name": "Respond Order Updated",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "72486cef-b8b9-4428-81ff-5cf81d1991f6",
+      "name": "Respond Order Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b=$('Admin Webhook').first().json.body||{};const OK=['new','contacted','resolved','closed'];const clean=s=>String(s==null?'':s).replace(/[\\u0000-\\u001f]/g,' ').trim();const safe=s=>/^[=+\\-@]/.test(s)?\"'\"+s:s;\nconst id=clean(b.lead_id).toUpperCase().slice(0,30),status=clean(b.status);\nif(!id||OK.indexOf(status)<0)return [{json:{ok:false,response:{ok:false,error:'valid lead id and status required'}}}];\nreturn [{json:{ok:true,upd:{lead_id:id,status,assignee:safe(clean(b.assignee).slice(0,40)),note:safe(clean(b.note).slice(0,300)),updated_at:new Date().toISOString()},response:{ok:true,lead_id:id,status}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "301d629f-8d29-44fb-9ecf-c7ef82365d74",
+      "name": "Validate lead update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "50baba6b-d6b2-4aed-bc20-256e90bb21b6",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a0a61e85-1f98-42e7-b0a3-37bd51083baa",
+      "name": "Lead update valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Validate lead update').first().json.upd.lead_id }}",
+            "status": "={{ $('Validate lead update').first().json.upd.status }}",
+            "assignee": "={{ $('Validate lead update').first().json.upd.assignee }}",
+            "note": "={{ $('Validate lead update').first().json.upd.note }}",
+            "updated_at": "={{ $('Validate lead update').first().json.upd.updated_at }}"
+          },
+          "matchingColumns": [
+            "lead_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "5cf5542a-9571-4aba-8eba-a9b4d22f66b4",
+      "name": "Update lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1320,
+        620
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Validate lead update').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "26db04a2-113a-4ec2-bc2a-ec0d1e594daa",
+      "name": "Respond Lead Updated",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "13edde81-3a70-4b43-8698-b785276c0be4",
+      "name": "Respond Lead Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const CATALOG={'VGM-CARTON-500ml':{n:\"Vaigai Fresh milk\",ta:\"வைகை ஃப்ரெஷ் பால்\",u:\"500 ml\",p:32,d:\"Everyday pasteurised milk in a clean, sealed pack.\",tags:[\"milk\", \"fresh\", \"daily\", \"pack\", \"carton\", \"tea\", \"coffee\", \"kids\"]},'VGM-BADAM-250ml':{n:\"Badam milk\",ta:\"பாதாம் பால்\",u:\"250 ml\",p:55,d:\"Roasted almonds and saffron in chilled, creamy milk.\",tags:[\"badam\", \"almond\", \"flavoured\", \"kids\", \"shake\", \"smoothie\"]},'VGM-GHEE-500ml':{n:\"Farm ghee\",ta:\"பண்ணை நெய்\",u:\"500 ml\",p:320,d:\"Golden, grainy and fragrant. Slow-made from fresh cream.\",tags:[\"ghee\", \"nei\", \"sweet\", \"pongal\", \"festival\", \"rice\"]},'VGM-CURD-400g':{n:\"Set curd\",ta:\"கெட்டித் தயிர்\",u:\"400 g\",p:60,d:\"Set in a clay pot the traditional way. Thick and cool.\",tags:[\"curd\", \"thayir\", \"yogurt\", \"dahi\", \"breakfast\", \"idli\", \"dosa\", \"lunch\"]},'VGM-BUTTER-200g':{n:\"Fresh butter\",ta:\"புதிய வெண்ணெய்\",u:\"200 g\",p:110,d:\"Cold, creamy and just salty enough.\",tags:[\"butter\", \"vennai\", \"idli\", \"dosa\", \"bread\"]},'VGM-HERO-500ml':{n:\"Glass bottle milk\",ta:\"கண்ணாடி பாட்டில் பால்\",u:\"500 ml\",p:36,d:\"Full cream milk in returnable glass. Pure and simple.\",tags:[\"milk\", \"glass\", \"bottle\", \"returnable\", \"coffee\", \"tea\", \"full cream\"]}};\nconst b=$('Admin Webhook').first().json.body||{};const sku=String(b.sku||''),date=String(b.date||'');\nif(!CATALOG[sku]||!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)||isNaN(Date.parse(date)))return [{json:{ok:false,response:{ok:false,error:'valid sku and date required'}}}];\nconst n=v=>Math.max(0,Math.min(100000,Math.round(+v||0)));const clean=s=>String(s==null?'':s).replace(/[\\u0000-\\u001f]/g,' ').trim();const safe=s=>/^[=+\\-@]/.test(s)?\"'\"+s:s;\nconst upd={stock_id:sku+'|'+date,sku,date,capacity:n(b.capacity),produced:n(b.produced),notes:safe(clean(b.notes).slice(0,200))};\nreturn [{json:{ok:true,upd,response:{ok:true,stock_id:upd.stock_id}}}];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "74d00643-0b40-4dd7-a381-32a2ae33810f",
+      "name": "Validate stock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "6736cbbe-a039-4a5c-996d-b0c8f56f5b90",
+              "leftValue": "={{ $json.ok }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cb3d13f8-8b30-4007-8fb2-0c97be691b3b",
+      "name": "Stock valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Config').first().json.sheet_id }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Stock"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "stock_id": "={{ $('Validate stock').first().json.upd.stock_id }}",
+            "sku": "={{ $('Validate stock').first().json.upd.sku }}",
+            "date": "={{ $('Validate stock').first().json.upd.date }}",
+            "capacity": "={{ $('Validate stock').first().json.upd.capacity }}",
+            "produced": "={{ $('Validate stock').first().json.upd.produced }}",
+            "notes": "={{ $('Validate stock').first().json.upd.notes }}"
+          },
+          "matchingColumns": [
+            "stock_id"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "06c655a9-d794-414d-a1f6-f8c223fd70c2",
+      "name": "Save stock",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1320,
+        800
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Validate stock').first().json.response) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "97803bf6-b4e3-4d76-95ad-eaff72607609",
+      "name": "Respond Stock Saved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.response) }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "aac0e566-e0d4-477b-b4fd-a7e3da959a65",
+      "name": "Respond Stock Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "content": "ADMIN API\nOne endpoint for the admin dashboard (admin.html). Protected by admin_key in Config (header x-vaigai-admin). Actions: list_orders, list_leads, list_stock, order_update, lead_update, stock_set. Only fixed statuses can be written; every text field is cleaned and spreadsheet-formula safe. Create the Stock tab from sheets/Stock.csv and add columns to Orders / Leads as in the CSVs. Put the dashboard behind your own login or IP rule as well (for example Cloudflare Access).\nSet the values in the Config node (webhook key, Google Sheet ID, WhatsApp and Telegram details). The website sends the same key in the x-vaigai-key header. Credentials: Google Sheets OAuth2, Telegram, OpenAI (assistant only). Nodes marked optional are disabled until you add credentials.",
+        "height": 300,
+        "width": 760
+      },
+      "id": "c5db3a59-b156-473a-8684-eaf6eb40087b",
+      "name": "Note d756",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -160
+      ]
+    }
+  ],
+  "connections": {
+    "Admin Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Admin key OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Admin key OK?": {
+      "main": [
+        [
+          {
+            "node": "Route action",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route action": {
+      "main": [
+        [
+          {
+            "node": "Read Orders (admin)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Leads (admin)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Stock (admin)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate order update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate lead update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate stock",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Unknown Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Orders (admin)": {
+      "main": [
+        [
+          {
+            "node": "Shape orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape orders": {
+      "main": [
+        [
+          {
+            "node": "Respond Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Leads (admin)": {
+      "main": [
+        [
+          {
+            "node": "Shape leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape leads": {
+      "main": [
+        [
+          {
+            "node": "Respond Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Stock (admin)": {
+      "main": [
+        [
+          {
+            "node": "Shape stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape stock": {
+      "main": [
+        [
+          {
+            "node": "Respond Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate order update": {
+      "main": [
+        [
+          {
+            "node": "Order update valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order update valid?": {
+      "main": [
+        [
+          {
+            "node": "Update order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Order Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update order": {
+      "main": [
+        [
+          {
+            "node": "Respond Order Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate lead update": {
+      "main": [
+        [
+          {
+            "node": "Lead update valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead update valid?": {
+      "main": [
+        [
+          {
+            "node": "Update lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Lead Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update lead": {
+      "main": [
+        [
+          {
+            "node": "Respond Lead Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate stock": {
+      "main": [
+        [
+          {
+            "node": "Stock valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stock valid?": {
+      "main": [
+        [
+          {
+            "node": "Save stock",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Stock Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save stock": {
+      "main": [
+        [
+          {
+            "node": "Respond Stock Saved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "vaigai"
+    }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

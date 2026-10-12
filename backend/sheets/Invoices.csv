@@ -1,0 +1,1 @@
+invoice_no,invoice_date,order_id,token,customer_name,phone,address,place_of_supply,lines_json,taxable_total,cgst,sgst,igst,round_off,total,payment_id,payment_mode
